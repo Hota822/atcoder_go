@@ -1,9 +1,27 @@
-// ========================  permutation string  =============================
-// e.g. 123 => [123, 132, 213, 231, 312, 321]
-// O(len(s)) ?
+package main
+
 import (
+	"fmt"
+	// "bufio"
+	// "os"
 	"strings"
+	// "strconv"
+	// "reflect"
+	// "math"
+	"sort"
 )
+
+// var sc = bufio.NewScanner(os.Stdin)
+var sli_len int
+
+func main() {
+	var s string
+	var k int
+	fmt.Scan(&s, &k)
+	sli_len = len(s)
+	all := GetCombination(s)
+	fmt.Println(all[k -1])
+}
 
 func GetPermutation(s string) []string {
 	swap := func(i, j int, sli []string) []string {
@@ -51,13 +69,6 @@ func GetPermutation(s string) []string {
 	}
 	return ret
 }
-
-// ========================  combination string  =============================
-// e.g. 122 => [122, 212, 221]
-import (
-	"strings"
-	"sort"
-)
 
 func GetCombination(s string) []string {
 	dup_sli := GetPermutation(s)

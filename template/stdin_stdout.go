@@ -59,4 +59,5 @@ func print(ans interface{}) {
 //============================ printf ===============================
 // Printf => PRINT args formatted by supplied string
 // Sprintf => RETURN args formatted by supplied string
+// %v => usable all of types, parse by default format
 // %g => float64, e.g. 67.333333333

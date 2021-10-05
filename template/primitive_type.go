@@ -17,3 +17,6 @@ sli_3 := append(sli, sli_2...)
 sli := make([]int, n)
 a := append(sli, 1, 2, 3)
 // => NG, over capacity
+
+// copy
+sli_4 := copy(sli)

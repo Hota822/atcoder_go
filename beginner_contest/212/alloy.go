@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"bufio"
-	"os"
+	// "bufio"
+	// "os"
 )
 
 func main() {
@@ -16,5 +16,4 @@ func main() {
 	} else {
 		fmt.Println("Alloy")
 	}
-
 }

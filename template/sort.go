@@ -22,8 +22,23 @@ func (a SortBy) Less(i, j int) bool { return a[i].coords < a[j].coords }
 type SortBy []card
 
 // usage
-func RunSort() {
-	sli := make([]card, n)
-	a_sli[i] = card{i: i, val: readInt()}
-	sort.Sort(SortBy(as))
+// func RunSort() {
+// 	sli := make([]card, n)
+// 	a_sli[i] = card{i: i, val: readInt()}
+// 	sort.Sort(SortBy(as))
+// }
+
+
+// sample-----------------------
+// sort []string (length is constant)
+func (a SortBy) Less(i, j int) bool {
+	ai,  aj := a[i], a[j]
+	var x int
+	for x=0; i < sli_len; i++ {
+		if ai[x] == aj[x] {
+			continue
+		}
+		break
+	}
+	return  ai[x] < aj[x]
 }
