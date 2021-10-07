@@ -74,3 +74,79 @@ func nextInt() int {
     ret, _ := strconv.Atoi(sc.Text())
     return ret
 }
+
+
+
+// package main
+
+// import (
+//     "fmt"
+//     "bufio"
+//     "os"
+//     "strconv"
+// )
+
+
+// var sc = bufio.NewScanner(os.Stdin)     
+// func main() {
+//     sc.Split(bufio.ScanWords)
+//     n, k := readInt(), readInt()        
+//     sli := make([]int, n)
+
+//     for i:=0; i < n; i++ {
+//         sli[i] = readInt()
+//     }
+
+//     candies := make(map[int]int, n)     
+//     for i:=0; i < k; i++ {
+//         candy := sli[i]
+//         if _, ok := candies[candy]; ok {
+//             candies[candy]++
+//         } else {
+//             candies[candy] = 1
+//         }
+//     }
+
+//     colors := len(candies)
+//     for i:=0; i < n - k; i++ {
+//         del_candy := sli[i]
+//         get_candy := sli[i + k]
+
+//         // delete
+//         if candies[del_candy] == 1 {
+//             delete(candies, del_candy)
+//         } else {
+//             candies[del_candy]--
+//         }
+//         // get
+//         if _, ok := candies[get_candy]; ok {
+//             candies[get_candy]++
+//         } else {
+//             candies[get_candy] = 1
+//         }
+//         colors = max(colors, len(candies))
+//     }
+//     fmt.Println(colors)
+// }
+
+// func readInt() int {
+//     sc.Scan()
+//     ret, _ := strconv.Atoi(sc.Text())
+//     return ret
+// }
+
+// func max(x, y int) int {
+//     if x > y {
+//         return x
+//     }
+//     return y
+// }
+
+// // map key exists
+// // mpa[key] => return value 2 is bool
+
+// // map count
+// // len(map)
+
+// // delete key of map
+// // delete(map, key)

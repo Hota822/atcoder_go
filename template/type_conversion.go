@@ -2,20 +2,6 @@
 import (
 	"strconv"
 )
-// scan
-func ReadInt64() int64 {
-	var ret int64
-    sc.Scan()
-    ret, _ = strconv.ParseInt(sc.Text(), 10, 64)
-    return ret
-}
-
-func ReadInt() int {
-	var ret int
-    sc.Scan()
-    ret, _ = strconv.Atoi(sc.Text())
-    return ret
-}
 
 // function
 func ConvertInt64(s string) int64 {

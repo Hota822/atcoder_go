@@ -2,21 +2,24 @@ package main
 
 import (
 	"fmt"
-	// "bufio"
+	"bufio"
 	"os"
 	// "strings"
-	// "strconv"
+	"strconv"
 	// "reflect"
 	// "math"
 	// "sort"
 )
 
+const (
+    // maxBufSize = 100000
+)
+
 var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
-	// var x int
-	// fmt.Scan(&x)
-
+	// buf := make([]byte, maxBufSize)
+	// sc.Buffer(buf, maxBufSize)
 	sc.Split(bufio.ScanWords)
 
 	x := readInt()
