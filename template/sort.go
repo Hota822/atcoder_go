@@ -5,7 +5,7 @@ func Ints (slice []int) []int {
 	// return sorted slice
 }
 
-// struct
+// struct====================================================================================
 // require 3 methods, len() , swap(), less() to the struct
 // and declare type, slice made by struct
 // e.g. order by ascending

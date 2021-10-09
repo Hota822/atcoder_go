@@ -12,28 +12,31 @@ import (
 )
 
 const (
-    // max_bufSize = 100000 // default: 64000
-	// prime_number = 1000000007
+    // maxBufSize = 100000
 )
 
 var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
 	// buf := make([]byte, maxBufSize)
-	// sc.Buffer(buf, max_bufSize)
+	// sc.Buffer(buf, maxBufSize)
 	sc.Split(bufio.ScanWords)
 
+	n := readInt()
 	x := readInt()
-	// y := readInt()
-
-	// s := read()
-	// t := read()
-
-	// n := readInt()
-	// sli := make([]int, n)
 	// sli := make([]string, n)
+	for i:=0; i < n; i++ {
+		x -= readInt()
+		if i % 2 == 1 {
+			x++
+		}
+	}
 
-	return x
+	if x < 0 {
+		return false
+	}
+
+	return true
 }
 
 

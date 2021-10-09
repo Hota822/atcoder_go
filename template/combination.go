@@ -52,6 +52,20 @@ func GetPermutation(s string) []string {
 	return ret
 }
 
+func getPermNum(n, v int) int64 {
+	var ret int64 = 1
+	for i:=0; i < v; i++ {
+		ret = (ret * int64(n)) % prime_number
+		n--
+		fmt.Println(ret)
+	}
+	if ret > 0 {
+		return ret
+	}
+	return 0
+}
+
+
 // ========================  combination string  =============================
 // e.g. 122 => [122, 212, 221]
 import (

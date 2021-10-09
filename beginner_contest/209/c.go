@@ -12,30 +12,51 @@ import (
 )
 
 const (
-    // max_bufSize = 100000 // default: 64000
-	// prime_number = 1000000007
+    // maxBufSize = 100000
+	
 )
 
 var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
 	// buf := make([]byte, maxBufSize)
-	// sc.Buffer(buf, max_bufSize)
+	// sc.Buffer(buf, maxBufSize)
 	sc.Split(bufio.ScanWords)
 
-	x := readInt()
-	// y := readInt()
-
-	// s := read()
-	// t := read()
-
-	// n := readInt()
+	n := readInt()
 	// sli := make([]int, n)
 	// sli := make([]string, n)
-
-	return x
+	m := make(map[int]int, n)
+	var ans int64 = 1
+	for i:=0; i < n; i++ {
+		c := readInt()
+		if _, ok := m[c]; ok {
+			m[c]++
+		} else {
+			m[c] = 1
+		}
+	}
+	var used int = 0
+	for k, v := range m {
+		fac := permutation(k - used, v)
+		used += v
+		ans = (ans * fac) % 1000000007
+	}
+	return ans
 }
 
+func permutation(n, v int) int64 {
+	var ret int64 = 1
+	for i:=0; i < v; i++ {
+		ret = (ret * int64(n)) % 1000000007
+		n--
+		fmt.Println(ret)
+	}
+	if ret > 0 {
+		return ret
+	}
+	return 0
+}
 
 // ========================read
 // func read() string {
