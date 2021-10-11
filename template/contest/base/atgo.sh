@@ -24,7 +24,7 @@ if [ "2" = "$2" ]; then
 fi
 
 if [ "3" = "$2" ]; then
-    FILE=sample2.txt
+    FILE=sample3.txt
     if [ ! -s $FILE ]; then
     echo "0 byte through: $FILE"
     else
@@ -34,7 +34,7 @@ if [ "3" = "$2" ]; then
 fi
 
 if [ "4" = "$2" ]; then
-    FILE=sample2.txt
+    FILE=sample4.txt
     if [ ! -s $FILE ]; then
     echo "0 byte through: $FILE"
     else

@@ -63,12 +63,15 @@ import (
 	"runtime"
 )
 
-func D(v interface{}) {
+func d(arg ...interface{}) {
 	_, _, l, _ := runtime.Caller(1)
 	s := strconv.Itoa(l)
 	fmt.Println("dumped at line: " + s + ", value: ")
-	fmt.Println(v)
+	for _, v := range arg {
+		fmt.Println(v)
+	}
 }
+
 //============================ printf ===============================
 // Printf => PRINT args formatted by supplied string
 // Sprintf => RETURN args formatted by supplied string

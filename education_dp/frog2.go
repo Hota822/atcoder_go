@@ -1,12 +1,12 @@
 package main
-
+// 1:12:05
 import (
 	"fmt"
 	"bufio"
 	"os"
 	"strconv"
 	// "runtime"
-	// "math"
+	"math"
 	// "reflect"
 	// "sort"
 	// "strings"
@@ -24,23 +24,50 @@ func run() interface{} {
 	// sc.Buffer(buf, max_bufSize)
 	sc.Split(bufio.ScanWords)
 
-	x := readInt()
-	s := read()
-
+	n, k := readInt(), readInt()
+	sli := make([]int, n)
+	cost := make([]int, n)
+	sli[0] = readInt()
+	cost[0] = 0
+	for i:=1; i < n; i++ {
+		h := readInt()
+		sli[i] = h
+		// min := make([]int, 0, k)
+		min := 2147483647
+		for j:=1; j <= k; j++{
+			idx := i - j
+			
+			if idx < 0 {
+				break
+			}
+			ci := DiffAbs(h, sli[idx])
+			sum_cost := ci + cost[idx]
+			if sum_cost < min {
+				min = sum_cost
+			}
+			// d(min)
+			// min_sli = append(min_sli, DiffAbs(h, sli[idx]))
+		}
+		cost[i] = min
+		// d(cost)
+	}
 	// sli := make([]int, n)
 	// sli := make([]string, n)
 
-	return x
+	return cost[n -1]
 }
+
+func DiffAbs(x, y int) int {
+	return int(math.Abs(float64(x - y)))
+}
+
+// func MinSli(sli []int) int {
+// 	sort.Ints(sli)
+// 	return sli[0]
+// }
 
 
 // ========================read
-func read() string {
-	sc.Scan()
-    ret := sc.Text()
-    return ret
-}
-
 func readInt() int {
     sc.Scan()
     ret, _ := strconv.Atoi(sc.Text())

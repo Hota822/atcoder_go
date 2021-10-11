@@ -4,31 +4,29 @@ import (
 	"fmt"
 	"bufio"
 	"os"
-	// "strings"
-	// "strconv"
-	// "reflect"
+	"strconv"
+	// "runtime"
 	// "math"
+	// "reflect"
 	// "sort"
+	// "strings"
 )
 
 const (
-    // maxBufSize = 100000
+    // max_bufSize = 100000 // default: 64000
+	// prime_number = 1000000007
 )
 
 var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
 	// buf := make([]byte, maxBufSize)
-	// sc.Buffer(buf, maxBufSize)
+	// sc.Buffer(buf, max_bufSize)
 	sc.Split(bufio.ScanWords)
 
 	x := readInt()
-	// y := readInt()
+	s := read()
 
-	// s := read()
-	// t := read()
-
-	// n := readInt()
 	// sli := make([]int, n)
 	// sli := make([]string, n)
 
@@ -37,11 +35,11 @@ func run() interface{} {
 
 
 // ========================read
-// func read() string {
-// 	sc.Scan()
-//     ret := sc.Text()
-//     return ret
-// }
+func read() string {
+	sc.Scan()
+    ret := sc.Text()
+    return ret
+}
 
 func readInt() int {
     sc.Scan()
@@ -85,3 +83,12 @@ func print(ans interface{}) {
 	}
 	fmt.Println(ans)
 }
+
+// func d(arg ...interface{}) {
+// 	_, _, l, _ := runtime.Caller(1)
+// 	s := strconv.Itoa(l)
+// 	fmt.Println("dumped at line: " + s + ", value: ")
+// 	for _, v := range arg {
+// 		fmt.Println(v)
+// 	}
+// }

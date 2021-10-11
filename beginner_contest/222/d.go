@@ -14,6 +14,7 @@ import (
 
 const (
     // maxBufSize = 100000
+	prime_number =  998244353
 )
 
 var sc = bufio.NewScanner(os.Stdin)
@@ -46,7 +47,7 @@ func run() interface{} {
 		ans_sli = append(ans_sli, 1)
 	}
 	// D(a_sli[n -1], b_sli[n -1])
-	
+	// D(diff)
 
 	for i:=n -2; i >= 0; i-- {
 		before := make([]int, len(ans_sli))
@@ -60,23 +61,28 @@ func run() interface{} {
 		// D(ans_sli)
 		// D(before)
 		// min = a_sli[i]
+		is_reach := false
 		for j:=a_sli[i]; j <= b_sli[i]; j++ {
 			// D(ans_sli)
-			min = Max(min, idx)
-			D(min)
-			if min <= j {
-			// ipf min[0] <= j {
-				// ans_sli = append(ans_sli, diff)
-			} else {
-				D(diff, before)
-				diff -= before[idx]
+			// D(min)
+			if is_reach {
+				// D(diff, before)
+				if diff > before[idx] {
+					diff -= before[idx]
+				} else {
+					diff = diff - before[idx] + prime_number
+				}
 				// ans_sli = append(ans_sli, diff)
 				idx++
 			}
 			ans_sli = append(ans_sli, diff)
+			// D(ans_sli)
 			diff = Sum(ans_sli)
+			if j == min {
+				is_reach = true
+			}
 		}
-		D(ans_sli)
+		// D(ans_sli)
 	}
 	return diff
 }
@@ -84,7 +90,7 @@ func run() interface{} {
 func Sum(sli []int) int {
 	sum := 0
 	for _, i:= range sli {
-		sum += i
+		sum = (sum + i) % prime_number
 	}
 	return sum
 }

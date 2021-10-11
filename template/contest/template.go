@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"bufio"
 	"os"
-	"runtime"
 	"strconv"
+	// "runtime"
 	// "math"
 	// "reflect"
 	// "sort"
@@ -14,6 +14,7 @@ import (
 
 const (
     // max_bufSize = 100000 // default: 64000
+	// max_int = 2147483647
 	// prime_number = 1000000007
 )
 
@@ -30,7 +31,8 @@ func run() interface{} {
 	// sli := make([]int, n)
 	// sli := make([]string, n)
 
-	return x
+	ans := x
+	return ans
 }
 
 
@@ -84,9 +86,11 @@ func print(ans interface{}) {
 	fmt.Println(ans)
 }
 
-func D(v interface{}) {
+func d(arg ...interface{}) {
 	_, _, l, _ := runtime.Caller(1)
 	s := strconv.Itoa(l)
 	fmt.Println("dumped at line: " + s + ", value: ")
-	fmt.Println(v)
+	for _, v := range arg {
+		fmt.Println(v)
+	}
 }

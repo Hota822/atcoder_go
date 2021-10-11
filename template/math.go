@@ -1,15 +1,23 @@
 package math
 
-func Abs(x, y int) float64 {
+// math
+func Abs(x float64) float64 {
 	// return absolute value
 }
 
+func AbsInt(x int) int {
+	return int(math.Abs(float64(x)))
+}
+
+func DiffAbs(x, y int) int {
+	return int(math.Abs(float64(x - y)))
+}
+
+// math
 func Pow(x, y int) float64 {
 	// return x^y
 }
 
-
-package original
 func SumXtoY(x, y int) int {
 	sum := x + y
 	if sum % 2 == 0 {
@@ -31,6 +39,15 @@ func Min(x, y int) int {
 		return x
 	}
 	return y
+}
+
+import {
+	"sort"
+}
+
+func MinSli(sli []int) int {
+	sort.Ints(sli)
+	return sli[0]
 }
 
 func Max(x, y int) int {
