@@ -2,29 +2,39 @@ package main
 
 import (
 	"fmt"
-	"bufio"
-	"os"
+	// "bufio"
+	// "os"
 	// "strings"
-	"strconv"
+	// "strconv"
 	// "reflect"
 	// "math"
-	// "sort"
+	"sort"
 )
 
 const (
     // maxBufSize = 100000
 )
 
-var sc = bufio.NewScanner(os.Stdin)
+// var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
 	// buf := make([]byte, maxBufSize)
 	// sc.Buffer(buf, maxBufSize)
-	sc.Split(bufio.ScanWords)
+	// sc.Split(bufio.ScanWords)
 
-	x := readInt()
+	// x := readInt()
 	// y := readInt()
 
+	x := SortBy {}
+	x[3] = 6
+	x[1] = 2
+	x[2] = 4
+	x[100] = 200
+	sort.Sort(x)
+	for k, v := range x {
+		fmt.Println(k, v)
+	}
+	
 	// s := read()
 	// t := read()
 
@@ -35,6 +45,14 @@ func run() interface{} {
 	return x
 }
 
+type SortBy map[int]int
+
+func (a SortBy) Len() int           { return len(a) }
+func (a SortBy) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a SortBy) Less(i, j int) bool { return a[i] < a[j] }
+
+
+
 
 // ========================read
 // func read() string {
@@ -43,11 +61,11 @@ func run() interface{} {
 //     return ret
 // }
 
-func readInt() int {
-    sc.Scan()
-    ret, _ := strconv.Atoi(sc.Text())
-    return ret
-}
+// func readInt() int {
+//     sc.Scan()
+//     ret, _ := strconv.Atoi(sc.Text())
+//     return ret
+// }
 
 
 //=======================main========================

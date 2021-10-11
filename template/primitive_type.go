@@ -19,4 +19,23 @@ a := append(sli, 1, 2, 3)
 // => NG, over capacity
 
 // copy
-sli_4 := copy(sli)
+from := make([]int, n)
+to := make([]int, len(from))
+copy(to, from)
+// return int(number of elements
+
+// change value of struct
+// use reference
+for i:=0; i < m; i++ {
+	for j:=0; j < 2 * n; j += 2 {
+		a := &sli[j]    // &
+		b := &sli[j +1] // &
+		win := Win(a.te[i], b.te[i])
+		if win == 1 {
+			a.order-- // changed
+		} else if win == -1 {
+			b.order-- // changed
+		}
+	}
+	sort.Sort(SortBy(sli))
+})

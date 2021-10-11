@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-func print(ans interface{}) {
+func Print(ans interface{}) {
 	if v, ok := ans.(bool); ok {
 		if v {
 			fmt.Println("Yes")
@@ -42,7 +42,7 @@ import (
 	"fmt"
 )
 
-func print(ans interface{}) {
+func Print(ans interface{}) {
 	if v, ok := ans.([]int); ok {
 		for _, v := range ans {
 			fmt.Print(v)
@@ -56,6 +56,19 @@ func print(ans interface{}) {
 	fmt.Println("")
 }
 
+//============================ debug ===============================
+import (
+	"fmt"
+	"strconv"
+	"runtime"
+)
+
+func D(v interface{}) {
+	_, _, l, _ := runtime.Caller(1)
+	s := strconv.Itoa(l)
+	fmt.Println("dumped at line: " + s + ", value: ")
+	fmt.Println(v)
+}
 //============================ printf ===============================
 // Printf => PRINT args formatted by supplied string
 // Sprintf => RETURN args formatted by supplied string
