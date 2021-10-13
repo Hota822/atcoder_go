@@ -32,6 +32,14 @@ func ReadInt() int {
     return ret
 }
 
+func readInt() int {
+    b := sc.Scan()
+    ret, _ := strconv.Atoi(sc.Text())
+	if !b {
+        panic()
+    }
+    return ret
+}
 
 func next() string {
 	sc.Scan()

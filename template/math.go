@@ -56,3 +56,29 @@ func Max(x, y int) int {
 	}
 	return y
 }
+
+func MaxWithIdx(x, y ,ix, iy, int) (int, int) {
+	if x > y {
+		return x, ix
+	}
+	return y, iy
+}
+
+func MaxSli(sli []int, l int) int {
+	sort.Ints(sli)
+	return sli[l]
+}
+
+func MaxOf3(sli [3]int) int {
+	x, y, z := sli[0], sli[1], sli[2]
+	if x > y {
+		if x > z {
+			return x
+		}
+	} else {
+		if y > z {
+			return y
+		}
+	}
+	return z
+}
