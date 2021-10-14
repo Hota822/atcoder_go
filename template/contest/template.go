@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"bufio"
 	"os"
-	"strings"
-	// "strconv"
+	"strconv"
+	// "strings"
 	// "runtime"
 	// "math"
 	// "reflect"
@@ -13,50 +13,54 @@ import (
 )
 
 const (
-    // max_bufSize = 100000 // default: 65536
-	// max_int = 2147483647
-	// prime_number = 1000000007
+    max_bufSize = 1_000_000_000 // default: 65536
+	initial_buf = 10000
+	// max_int32 = 2147483647
+	// prime_number = 1000_000_007
 )
 
 var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
-	// buf := make([]byte, 0)
-	// sc.Buffer(buf, max_bufSize)
-	// sc.Split(bufio.ScanWords)
-
-	// x := readInt()
+	n := readInt()
 	// s := read()
 
-	// sli := make([]int, n)
-	// sli := make([]string, n)
+	// sli := readSli(n)
 
-	ans := 1
+	ans := n
 	return ans
 }
 
 
 // ========================read
-func read() (string...) {
-	sc.Scan()
-    s := sc.Text()
-	return strings.Split(s)
-}
-
-func read() string {
-	sc.Scan()
-    return sc.Text()
-}
-
-// func readInt() int {
-//     sc.Scan()
-//     ret, _ := strconv.Atoi(sc.Text())
-//     return ret
+// func read() string {
+// 	sc.Scan()
+//     return sc.Text()
 // }
+
+// func readSli(n int) []string {
+// // func readSli(n int) []int {
+// 	sli := make([]string, n)
+// 	// sli := make([]int, n)
+// 	for i:=0; i < n; i++ {
+// 		sli[i] = read()
+// 		// sli[i] = readInt()
+// 	}
+//     return sli
+// }
+
+func readInt() int {
+    sc.Scan()
+    ret, _ := strconv.Atoi(sc.Text())
+    return ret
+}
 
 
 //=======================main========================
 func main() {
+	buf := make([]byte, initial_buf)
+	sc.Buffer(buf, max_bufSize)
+	sc.Split(bufio.ScanWords)
 	result := run()
 	print(result)
 }

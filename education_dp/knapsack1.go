@@ -22,15 +22,56 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
-	n := readInt()
-	// s := read()
+	n, w := readInt(), readInt()
 
+	lis := make([][]int, n)
+	lis[0] = make([]int, 2)
+	for i:=0; i < n; i ++ {
+		lis[i] = readSli(2)
+	}
+	dp := make([][]int, w +1)
+	// fmt.Println(len(dp))
+	dp[0] = make([]int, n +1)
 	// sli := readSli(n)
+	
+	// n 個の荷物を詰めることができる袋を用意
+	for i:=0; i <= w; i++ {
+		// {w, v}
+		dp[i] = make([]int, n +1)
+		// fmt.Println(dp[i])
+	}
+	
 
-	ans := n
+	// 重さ== i
+	for i:=1; i <= w; i++ {
+		// j 番の荷物を詰める
+		for j:=1; j < n; j++ {
+			jsack := lis[j]
+			if jsack[0] > i {
+				// fmt.Println(i, j)
+				dp[i][j] = dp[i][j -1]
+			} else {
+				w := 0
+				if i >= jsack[0] {
+					w = dp[i -jsack[0]][j -1] + jsack[1]
+				}
+				// fmt.Println(dp[i])
+				dp[i][j] = Max(dp[i][j -1], w)
+			}
+		}
+	}
+
+	// ans := dp[w][n]
+	ans := dp
 	return ans
 }
 
+func Max(x, y int) int {
+	if x > y {
+		return x
+	}
+	return y
+}
 
 // ========================read
 // func read() string {
@@ -39,15 +80,15 @@ func run() interface{} {
 // }
 
 // func readSli(n int) []string {
-// // func readSli(n int) []int {
-// 	sli := make([]string, n)
-// 	// sli := make([]int, n)
-// 	for i:=0; i < n; i++ {
-// 		sli[i] = read()
-// 		// sli[i] = readInt()
-// 	}
-//     return sli
-// }
+func readSli(n int) []int {
+	// sli := make([]string, n)
+	sli := make([]int, n)
+	for i:=0; i < n; i++ {
+		// sli[i] = read()
+		sli[i] = readInt()
+	}
+    return sli
+}
 
 func readInt() int {
     sc.Scan()
