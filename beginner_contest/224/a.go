@@ -5,8 +5,8 @@ import (
 	"bufio"
 	"os"
 	"strconv"
-	"runtime"
 	// "strings"
+	// "runtime"
 	// "math"
 	// "reflect"
 	// "sort"
@@ -22,37 +22,42 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
-	n := readInt()
-	// s := read()
-
-	sli := make([][]int, n)
-	for i:=0; i < n; i++ {
-		sli[i] = readSli(2)
+	// n := readInt()
+	s := read()
+	l := len(s)
+	er := s[(l -2):]
+	if er == "er" {
+		return "er"
 	}
 	
-	// dp := make([][]int, n)
 
-	ans := sli
-	return ans
+	// if ist == "ist" {
+		return "ist"
+	// }
+	// ret
+	// sli := readSli(n)
+
+	// ans := n
+	// return ans
 }
 
 
 // ========================read
-// func read() string {
-// 	sc.Scan()
-//     return sc.Text()
-// }
+func read() string {
+	sc.Scan()
+    return sc.Text()
+}
 
 // func readSli(n int) []string {
-func readSli(n int) []int {
-	// sli := make([]string, n)
-	sli := make([]int, n)
-	for i:=0; i < n; i++ {
-		// sli[i] = read()
-		sli[i] = readInt()
-	}
-    return sli
-}
+// // func readSli(n int) []int {
+// 	sli := make([]string, n)
+// 	// sli := make([]int, n)
+// 	for i:=0; i < n; i++ {
+// 		sli[i] = read()
+// 		// sli[i] = readInt()
+// 	}
+//     return sli
+// }
 
 func readInt() int {
     sc.Scan()
@@ -100,33 +105,11 @@ func print(ans interface{}) {
 	fmt.Println(ans)
 }
 
-// =============================math
-func Max(x, y int) int {
-	if x > y {
-		return x
-	}
-	return y
-}
-
-func Min(x, y int) int {
-	if x < y {
-		return x
-	}
-	return y
-}
-
-func Abs(x int) int {
-	if x > 0 {
-		return x
-	}
-	return - x
-}
-
-func p(arg ...interface{}) {
-	_, _, l, _ := runtime.Caller(1)
-	s := strconv.Itoa(l)
-	fmt.Println("dumped at line: " + s + ", value: ")
-	for _, v := range arg {
-		fmt.Println(v)
-	}
-}
+// func d(arg ...interface{}) {
+// 	_, _, l, _ := runtime.Caller(1)
+// 	s := strconv.Itoa(l)
+// 	fmt.Println("dumped at line: " + s + ", value: ")
+// 	for _, v := range arg {
+// 		fmt.Println(v)
+// 	}
+// }

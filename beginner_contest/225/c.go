@@ -5,8 +5,8 @@ import (
 	"bufio"
 	"os"
 	"strconv"
-	"runtime"
 	// "strings"
+	// "runtime"
 	// "math"
 	// "reflect"
 	// "sort"
@@ -16,23 +16,58 @@ const (
     max_bufSize = 1_000_000_000 // default: 65536
 	initial_buf = 10000
 	// max_int32 = 2147483647
-	// prime_number = 1000_000_007
+	prime_number = 1000_000_007
 )
 
 var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
-	n := readInt()
+	n, m := readInt(), readInt()
+
 	// s := read()
-
-	sli := make([][]int, n)
+	ans := true
+	before := 0
+	offset := 0
 	for i:=0; i < n; i++ {
-		sli[i] = readSli(2)
-	}
-	
-	// dp := make([][]int, n)
+		row := readSli(m)
+		
+		if before != 0 {
+			if row[0] != before + 7 {
+				// fmt.Println("false")
+				ans = false
+			}
+		} else {
+			offset = row[0] % 7
+			// fmt.Println(offset)
+			// fmt.Println()
+			if offset == 0  && m != 1{
+				ans = false
+			}
 
-	ans := sli
+			if offset +m > 8 {
+				ans = false
+			}
+		}
+
+		if (!ans) {
+			break
+		}
+		before = row[0]
+
+		b := row[0]
+		for j:=1; j < m; j++ {
+			b++
+			if b != row[j] {
+				// fmt.Println(b, row[j])
+				ans = false
+			}
+		}
+		if (!ans) {
+			break
+		}
+	}
+	// sli := readSli(n)
+
 	return ans
 }
 
@@ -49,7 +84,7 @@ func readSli(n int) []int {
 	sli := make([]int, n)
 	for i:=0; i < n; i++ {
 		// sli[i] = read()
-		sli[i] = readInt()
+		sli[i] = readInt() 
 	}
     return sli
 }
@@ -100,33 +135,11 @@ func print(ans interface{}) {
 	fmt.Println(ans)
 }
 
-// =============================math
-func Max(x, y int) int {
-	if x > y {
-		return x
-	}
-	return y
-}
-
-func Min(x, y int) int {
-	if x < y {
-		return x
-	}
-	return y
-}
-
-func Abs(x int) int {
-	if x > 0 {
-		return x
-	}
-	return - x
-}
-
-func p(arg ...interface{}) {
-	_, _, l, _ := runtime.Caller(1)
-	s := strconv.Itoa(l)
-	fmt.Println("dumped at line: " + s + ", value: ")
-	for _, v := range arg {
-		fmt.Println(v)
-	}
-}
+// func d(arg ...interface{}) {
+// 	_, _, l, _ := runtime.Caller(1)
+// 	s := strconv.Itoa(l)
+// 	fmt.Println("dumped at line: " + s + ", value: ")
+// 	for _, v := range arg {
+// 		fmt.Println(v)
+// 	}
+// }

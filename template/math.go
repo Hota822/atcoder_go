@@ -12,10 +12,6 @@ func Abs(x int) int {
 	return - x
 }
 
-func AbsInt(x int) int {
-	return int(math.Abs(float64(x)))
-}
-
 func DiffAbs(x, y int) int {
 	return int(math.Abs(float64(x - y)))
 }

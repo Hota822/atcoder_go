@@ -5,8 +5,8 @@ import (
 	"bufio"
 	"os"
 	"strconv"
-	"runtime"
 	// "strings"
+	// "runtime"
 	// "math"
 	// "reflect"
 	// "sort"
@@ -22,19 +22,37 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
-	n := readInt()
+	// n := readInt()
 	// s := read()
 
-	sli := make([][]int, n)
-	for i:=0; i < n; i++ {
-		sli[i] = readSli(2)
+	h, w := readInt(), readInt()
+	sli := make([][]int, h)
+	for i:=0; i < h; i++ {
+		sli[i] = readSli(w)
 	}
-	
-	// dp := make([][]int, n)
 
-	ans := sli
+	for i:=0; i < h; i++ {
+		for j:=i +1; j < h; j++ {
+			for k:=0; k < w; k++ {
+				for l:=k +1; l < w; l++{
+					lu := sli[i][k]
+					ru := sli[i][l]
+					ld := sli[j][k]
+					rd := sli[j][l]
+					// fmt.Println(lu, ru, ld, rd)
+					
+					if lu + rd > ld + ru {
+						// fmt.Println(i+1, j+1, k+1, l+1)
+						return false
+					}
+				}
+			}
+		}
+	}
+	ans := true
 	return ans
 }
+
 
 
 // ========================read
@@ -100,33 +118,11 @@ func print(ans interface{}) {
 	fmt.Println(ans)
 }
 
-// =============================math
-func Max(x, y int) int {
-	if x > y {
-		return x
-	}
-	return y
-}
-
-func Min(x, y int) int {
-	if x < y {
-		return x
-	}
-	return y
-}
-
-func Abs(x int) int {
-	if x > 0 {
-		return x
-	}
-	return - x
-}
-
-func p(arg ...interface{}) {
-	_, _, l, _ := runtime.Caller(1)
-	s := strconv.Itoa(l)
-	fmt.Println("dumped at line: " + s + ", value: ")
-	for _, v := range arg {
-		fmt.Println(v)
-	}
-}
+// func d(arg ...interface{}) {
+// 	_, _, l, _ := runtime.Caller(1)
+// 	s := strconv.Itoa(l)
+// 	fmt.Println("dumped at line: " + s + ", value: ")
+// 	for _, v := range arg {
+// 		fmt.Println(v)
+// 	}
+// }
