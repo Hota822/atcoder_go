@@ -6,7 +6,7 @@ import (
 	"os"
 	"strconv"
 	"runtime"
-	// "strings"
+	"strings"
 	// "math"
 	// "reflect"
 	// "sort"
@@ -22,43 +22,53 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
-	n := readInt()
-	// s := read()
+	// n := readInt()
+	s, t := read(), read()
 
-	sli := make([][]int, n)
-	for i:=0; i < n; i++ {
-		sli[i] = readSli(2)
+	// sli := make([][]int, n)
+	// for i:=0; i < n; i++ {
+	// 	sli[i] = readSli(2)
+	// }
+	t_sli := strings.Split(t, "")
+	idx := 0
+	ans := make([]string, 0, Max(len(s), len(t)))
+	m := make(map[string]struct{}, 3000)
+	for _, c := range s {
+		for j:=idx; j < len(t); j++ {
+			if t_sli[j] == string(c) {
+				m[string(c)] = struct{}{}
+			}
+		}
 	}
-	
 	// dp := make([][]int, n)
 
-	ans := sli
+	// ans := sli
 	return ans
 }
 
 
 // ========================read
-// func read() string {
-// 	sc.Scan()
-//     return sc.Text()
-// }
+func read() string {
+	sc.Scan()
+    return sc.Text()
+}
 
 // func readSli(n int) []string {
-func readSli(n int) []int {
-	// sli := make([]string, n)
-	sli := make([]int, n)
-	for i:=0; i < n; i++ {
-		// sli[i] = read()
-		sli[i] = readInt()
-	}
-    return sli
-}
+// func readSli(n int) []int {
+// 	// sli := make([]string, n)
+// 	sli := make([]int, n)
+// 	for i:=0; i < n; i++ {
+// 		// sli[i] = read()
+// 		sli[i] = readInt()
+// 	}
+//     return sli
+// }
 
-func readInt() int {
-    sc.Scan()
-    ret, _ := strconv.Atoi(sc.Text())
-    return ret
-}
+// func readInt() int {
+//     sc.Scan()
+//     ret, _ := strconv.Atoi(sc.Text())
+//     return ret
+// }
 
 
 //=======================main========================
@@ -67,7 +77,7 @@ func main() {
 	sc.Buffer(buf, max_bufSize)
 	sc.Split(bufio.ScanWords)
 	result := run()
-	Print(result)
+	PrintOne(result)
 }
 
 func Print(ans interface{}) {
@@ -113,7 +123,6 @@ func PrintOne(ans interface{}) {
 	}
 	fmt.Println("")
 }
-
 
 // =============================math
 func Max(x, y int) int {

@@ -67,10 +67,10 @@ func main() {
 	sc.Buffer(buf, max_bufSize)
 	sc.Split(bufio.ScanWords)
 	result := run()
-	Print(result)
+	print(result)
 }
 
-func Print(ans interface{}) {
+func print(ans interface{}) {
 	if v, ok := ans.(bool); ok {
 		if v {
 			fmt.Println("Yes")
@@ -99,21 +99,6 @@ func Print(ans interface{}) {
 	}
 	fmt.Println(ans)
 }
-
-func PrintOne(ans interface{}) {
-	if sli, ok := ans.([]int); ok {
-		for _, v := range sli {
-			fmt.Print(v)
-		}
-	}
-	if sli, ok := ans.([]string); ok {
-		for _, v := range sli {
-			fmt.Print(v)
-		}
-	}
-	fmt.Println("")
-}
-
 
 // =============================math
 func Max(x, y int) int {

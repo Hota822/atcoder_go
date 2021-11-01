@@ -42,14 +42,14 @@ import (
 	"fmt"
 )
 
-func Print(ans interface{}) {
-	if v, ok := ans.([]int); ok {
-		for _, v := range ans {
+func PrintOne(ans interface{}) {
+	if sli, ok := ans.([]int); ok {
+		for _, v := range sli {
 			fmt.Print(v)
 		}
 	}
-	if v, ok := ans.([]string); ok {
-		for _, v := range ans {
+	if sli, ok := ans.([]string); ok {
+		for _, v := range sli {
 			fmt.Print(v)
 		}
 	}
