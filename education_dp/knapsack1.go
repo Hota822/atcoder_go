@@ -31,29 +31,28 @@ func run() interface{} {
 	}
 	dp := make([][]int, w +1)
 	// fmt.Println(len(dp))
+
+	// banpei
 	dp[0] = make([]int, n +1)
-	// sli := readSli(n)
-	
-	// n 個の荷物を詰めることができる袋を用意
+
 	for i:=0; i <= w; i++ {
 		// {w, v}
 		dp[i] = make([]int, n +1)
 		// fmt.Println(dp[i])
 	}
-	
 
 	// 重さ== i
 	for i:=1; i <= w; i++ {
 		// j 番の荷物を詰める
-		for j:=1; j < n; j++ {
-			jsack := lis[j]
-			if jsack[0] > i {
+		for j:=1; j <= n; j++ {
+			item := lis[j -1]
+			if item[0] > i {
 				// fmt.Println(i, j)
 				dp[i][j] = dp[i][j -1]
 			} else {
 				w := 0
-				if i >= jsack[0] {
-					w = dp[i -jsack[0]][j -1] + jsack[1]
+				if i >= item[0] {
+					w = dp[i -item[0]][j -1] + item[1]
 				}
 				// fmt.Println(dp[i])
 				dp[i][j] = Max(dp[i][j -1], w)
@@ -61,8 +60,8 @@ func run() interface{} {
 		}
 	}
 
-	// ans := dp[w][n]
-	ans := dp
+	ans := dp[w][n]
+	// ans := dp
 	return ans
 }
 

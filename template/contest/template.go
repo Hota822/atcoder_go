@@ -25,9 +25,12 @@ func run() interface{} {
 	n := readInt()
 	// s := read()
 
-	// sli := readSli(n)
+	sli := make([][]int m)
+	for i:=0; i < n; i++ {
+		sli[i] = readSli(2)
+	}
 
-	ans := n
+	ans := sli
 	return ans
 }
 
@@ -39,15 +42,15 @@ func run() interface{} {
 // }
 
 // func readSli(n int) []string {
-// // func readSli(n int) []int {
-// 	sli := make([]string, n)
-// 	// sli := make([]int, n)
-// 	for i:=0; i < n; i++ {
-// 		sli[i] = read()
-// 		// sli[i] = readInt()
-// 	}
-//     return sli
-// }
+func readSli(n int) []int {
+	// sli := make([]string, n)
+	sli := make([]int, n)
+	for i:=0; i < n; i++ {
+		// sli[i] = read()
+		sli[i] = readInt()
+	}
+    return sli
+}
 
 func readInt() int {
     sc.Scan()
