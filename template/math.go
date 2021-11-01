@@ -1,8 +1,15 @@
 package math
 
-// math
+// math package
 func Abs(x float64) float64 {
 	// return absolute value
+}
+
+func Abs(x int) int {
+	if x > 0 {
+		return x
+	}
+	return - x
 }
 
 func AbsInt(x int) int {
@@ -13,7 +20,7 @@ func DiffAbs(x, y int) int {
 	return int(math.Abs(float64(x - y)))
 }
 
-// math
+// math package
 func Pow(x, y int) float64 {
 	// return x^y
 }
@@ -64,8 +71,9 @@ func MaxWithIdx(x, y ,ix, iy, int) (int, int) {
 	return y, iy
 }
 
-func MaxSli(sli []int, l int) int {
+func MaxSli(sli []int) int {
 	sort.Ints(sli)
+	l := len(sli)
 	return sli[l]
 }
 

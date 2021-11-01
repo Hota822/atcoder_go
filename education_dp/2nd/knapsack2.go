@@ -22,16 +22,15 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
-	n := readInt()
+	n, w := readInt(), readInt()
 	// s := read()
 
 	sli := make([][]int, n)
 	for i:=0; i < n; i++ {
 		sli[i] = readSli(2)
 	}
-	
-	// dp := make([][]int, n)
 
+	
 	ans := sli
 	return ans
 }

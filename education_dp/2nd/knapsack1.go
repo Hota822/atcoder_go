@@ -5,8 +5,8 @@ import (
 	"bufio"
 	"os"
 	"strconv"
-	"runtime"
 	// "strings"
+	"runtime"
 	// "math"
 	// "reflect"
 	// "sort"
@@ -22,19 +22,64 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
-	n := readInt()
+	n, w := readInt(), readInt()
 	// s := read()
 
-	sli := make([][]int, n)
-	for i:=0; i < n; i++ {
+	sli := make([][]int, n +1)
+	for i:=1; i <= n; i++ {
 		sli[i] = readSli(2)
 	}
 	
-	// dp := make([][]int, n)
-
-	ans := sli
+	dp := make([][]int, w +1)
+	dp[0] = make([]int, n +1)
+	
+	// 重さ
+	for i:=1; i <= w; i++ {
+		// N番目
+		dp[i] = make([]int, n +1)
+		for j:=1; j <=n; j++ {
+			ns := sli[j]
+			// d(ns)
+			// N番目の重さがi以下の時
+			if i < ns[0] {
+				// 重すぎる時はそもそも入れられない
+					dp[i][j] = dp[i][j -1]
+				continue
+			} else {
+				if i - ns[0] < 0 {
+					// 入れると必ずオーバーする場合、１つ前をみて交換するか決める
+					before := dp[i][j -1]
+					dp[i][j] = Max(before, ns[1])
+				} else {
+					// １つ前をみて、入れるか入れないかを決める
+					// max_val := 0
+					not_in := dp[i][j -1]
+					in := dp[i -ns[0]][j -1] + ns[1]
+					dp[i][j] = Max(not_in, in)
+				}
+			}
+		}
+	}
+	// d(dp)
+	ans := dp[w][n]
 	return ans
 }
+
+// ============================math
+func Max(x, y int) int {
+	if x > y {
+		return x
+	}
+	return y
+}
+
+func Min(x, y int) int {
+	if x < y {
+		return x
+	}
+	return y
+}
+
 
 
 // ========================read
@@ -100,29 +145,7 @@ func print(ans interface{}) {
 	fmt.Println(ans)
 }
 
-// =============================math
-func Max(x, y int) int {
-	if x > y {
-		return x
-	}
-	return y
-}
-
-func Min(x, y int) int {
-	if x < y {
-		return x
-	}
-	return y
-}
-
-func Abs(x int) int {
-	if x > 0 {
-		return x
-	}
-	return - x
-}
-
-func p(arg ...interface{}) {
+func d(arg ...interface{}) {
 	_, _, l, _ := runtime.Caller(1)
 	s := strconv.Itoa(l)
 	fmt.Println("dumped at line: " + s + ", value: ")
