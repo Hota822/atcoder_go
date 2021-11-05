@@ -29,21 +29,68 @@ func run() interface{} {
 	// for i:=0; i < n; i++ {
 	// 	sli[i] = readSli(2)
 	// }
+	s_sli := strings.Split(s, "")
 	t_sli := strings.Split(t, "")
-	idx := 0
-	ans := make([]string, 0, Max(len(s), len(t)))
-	m := make(map[string]struct{}, 3000)
-	for _, c := range s {
-		for j:=idx; j < len(t); j++ {
-			if t_sli[j] == string(c) {
-				m[string(c)] = struct{}{}
-			}
-		}
-	}
-	// dp := make([][]int, n)
+	dp := make([][]string, len(t) +1)
+	m := GetAlphabetMap()
+    dp[0] = make([]string, len(s) + 1)
+    // for i:=0; i < len(s); i++ {
+    //     m[s_sli[i]]++
+    // }
+    // ans := make([]string, Max(len(s), len(t)))
+    for i:=1; i <= len(t_sli); i++ {
+        dp[i] = make([]string, len(t) + 1)
+        t_c := t_sli[i -1]
+        m[t_c]++
+        count := GetAlphabetMap()
+        cache := ""
+        for j:=1; j <= len(s_sli); j++ {
+            s_c := s_sli[j -1]
+            if s_c == t_c {
+                // p(count[t_c], m[t_c])
+                if count[t_c] < m[t_c] {
+                    cache = dp[i][j -1] + t_c
+                    // p(s_c, cache, i, j)
+                }
 
-	// ans := sli
+                if len(cache) < len(dp[i -1][j]) {
+                    count[t_c]--
+                    cache = dp[i -1][j] + t_c
+                    // p("if")
+                }
+
+                dp[i][j] = cache
+                count[t_c]++
+            } else {
+                dp[i][j] = Longer(dp[i][j -1], dp[i -1][j])
+            }
+        }
+    }
+
+	// ans := dp[len(s)][len(t)]
+    ans := dp[len(t)][len(s)]
+    // dp[1][1] = "23"
+    // p(dp)
 	return ans
+}
+
+func Longer(s, t string) string {
+    ls := len(s)
+    lt := len(t)
+    if ls >= lt {
+        return s
+    }
+
+    return t
+}
+
+func GetAlphabetMap() map[string]int {
+	m := make(map[string]int)
+	alphabets := []string {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"}
+	for i:=0; i < 26; i++ {
+		m[alphabets[i]] = 0
+	}
+	return m
 }
 
 
@@ -77,7 +124,7 @@ func main() {
 	sc.Buffer(buf, max_bufSize)
 	sc.Split(bufio.ScanWords)
 	result := run()
-	PrintOne(result)
+	Print(result)
 }
 
 func Print(ans interface{}) {
