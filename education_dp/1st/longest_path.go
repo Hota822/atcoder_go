@@ -22,15 +22,16 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
-	n := readInt()
+	n, m := readInt(), readInt()
 	// s := read()
 
 	sli := make([][]int, n)
-	for i:=0; i < n; i++ {
+    m := make(map[int] struct {})
+	for i:=0; i < m; i++ {
 		sli[i] = readSli(2)
 	}
 
-	// dp := make([][]int, n)
+	dp := make([][]int, n)
 
 	ans := sli
 	return ans
@@ -67,10 +68,10 @@ func main() {
 	sc.Buffer(buf, max_bufSize)
 	sc.Split(bufio.ScanWords)
 	result := run()
-	Print(result)
+	print(result)
 }
 
-func Print(ans interface{}) {
+func print(ans interface{}) {
 	if v, ok := ans.(bool); ok {
 		if v {
 			fmt.Println("Yes")
@@ -100,21 +101,6 @@ func Print(ans interface{}) {
 	fmt.Println(ans)
 }
 
-func PrintOne(ans interface{}) {
-	if sli, ok := ans.([]int); ok {
-		for _, v := range sli {
-			fmt.Print(v)
-		}
-	}
-	if sli, ok := ans.([]string); ok {
-		for _, v := range sli {
-			fmt.Print(v)
-		}
-	}
-	fmt.Println("")
-}
-
-
 // =============================math
 func Max(x, y int) int {
 	if x > y {
@@ -135,22 +121,6 @@ func Abs(x int) int {
 		return x
 	}
 	return - x
-}
-
-func SumXtoY(x, y int) int {
-	sum := x + y
-	if sum % 2 == 0 {
-		return sum * 2 + sum / 2
-	}
-	return sum * 2
-}
-
-func Sum(sli [int]) int {
-	sum := 0
-	for _, i := range sli {
-		sum += i
-	}
-	return sum
 }
 
 func p(arg ...interface{}) {

@@ -4,6 +4,11 @@ types := make(map[int]string, n)
 // use struct {} as value is the lowest cost
 types := make(map[int]struct{}, n)
 
+// check key
+if _, ok := m[key]; ok {
+    // some codes...
+}
+
 // -----------------slice--------------------------------
 // make([]{value_type}, {size}, {capacity} )
 slice := make([]int, n)
@@ -39,3 +44,45 @@ for i:=0; i < m; i++ {
 	}
 	sort.Sort(SortBy(sli))
 })
+
+// --------------------- struct ------------------------------------------------------
+type Coord struct {
+    x int
+    y int
+}
+
+// --------------------- type conversion ------------------------------------------------------
+import (
+	"strconv"
+)
+
+// string <-> int ------------------------------
+func ConvertStringToInt(s string) int {
+    ret, _ := strconv.Atoi(s)
+    return ret
+}
+
+func ConvertIntToString(i int) string {
+    ret := strconv.Itoa(i)
+    return ret
+}
+
+// float <-> string
+    // eは十進対数表記
+    // fは非対数表記
+    // 第３引数は表示桁数
+    // 第４引数はBit
+func ConvertFloatToString(f float64) string {
+    ret := strconv.FormatFloat(f, 'f',  4, 64)
+	return ret
+}
+
+func ConvertStringToFloat(s string) float64 {
+    ret, _ := strconv.parseFloat(s, 64)
+    return ret
+}
+
+// float64 <-> int -----------------------------------
+int(f)
+float64(i)
+// ---------------------------------------------------------------------------

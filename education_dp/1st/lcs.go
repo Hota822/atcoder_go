@@ -31,68 +31,46 @@ func run() interface{} {
 	// }
 	s_sli := strings.Split(s, "")
 	t_sli := strings.Split(t, "")
-	dp := make([][]string, len(t) +1)
-	m := GetAlphabetMap()
-    dp[0] = make([]string, len(s) + 1)
-    // for i:=0; i < len(s); i++ {
-    //     m[s_sli[i]]++
-    // }
-    // ans := make([]string, Max(len(s), len(t)))
-    for i:=1; i <= len(t_sli); i++ {
-        dp[i] = make([]string, len(t) + 1)
-        t_c := t_sli[i -1]
-        m[t_c]++
-        count := GetAlphabetMap()
-        cache := ""
-        for j:=1; j <= len(s_sli); j++ {
-            s_c := s_sli[j -1]
+	dp := make([][]int, len(s) +1)
+    dp[0] = make([]int, len(t) +1)
+
+    for i:=1; i <= len(s); i++ {
+        s_c := s_sli[i -1]
+        dp[i] = make([]int, len(t) +1)
+        for j:=1; j <=len(t); j++ {
+            t_c := t_sli[j -1]
             if s_c == t_c {
-                // p(count[t_c], m[t_c])
-                if count[t_c] < m[t_c] {
-                    cache = dp[i][j -1] + t_c
-                    // p(s_c, cache, i, j)
-                }
-
-                if len(cache) < len(dp[i -1][j]) {
-                    count[t_c]--
-                    cache = dp[i -1][j] + t_c
-                    // p("if")
-                }
-
-                dp[i][j] = cache
-                count[t_c]++
+                dp[i][j] = dp[i -1][j -1] +1
             } else {
-                dp[i][j] = Longer(dp[i][j -1], dp[i -1][j])
+                dp[i][j] = Max(dp[i -1][j], dp[i][j -1])
             }
         }
     }
 
-	// ans := dp[len(s)][len(t)]
-    ans := dp[len(t)][len(s)]
-    // dp[1][1] = "23"
-    // p(dp)
-	return ans
-}
-
-func Longer(s, t string) string {
-    ls := len(s)
-    lt := len(t)
-    if ls >= lt {
-        return s
+    l := dp[len(s)][len(t)]
+    ans := make([]string, l)
+    i := len(s)
+    j := len(t)
+    for {
+        s_c := s_sli[i -1]
+        t_c := t_sli[j -1]
+        if t_c == s_c {
+            ans[l -1] = t_c
+            i--
+            j--
+            l--
+        } else if dp[i -1][j] == dp[i][j] {
+            i--
+        } else {
+            j--
+        }
+        if l == 0 {
+            break
+        }
     }
-
-    return t
+    // p(dp)
+    return ans
 }
-
-func GetAlphabetMap() map[string]int {
-	m := make(map[string]int)
-	alphabets := []string {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"}
-	for i:=0; i < 26; i++ {
-		m[alphabets[i]] = 0
-	}
-	return m
-}
-
 
 // ========================read
 func read() string {
@@ -124,7 +102,7 @@ func main() {
 	sc.Buffer(buf, max_bufSize)
 	sc.Split(bufio.ScanWords)
 	result := run()
-	Print(result)
+	PrintOne(result)
 }
 
 func Print(ans interface{}) {
