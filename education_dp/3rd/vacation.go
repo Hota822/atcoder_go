@@ -22,49 +22,33 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
-	n, w := readInt(), readInt()
+	n := readInt()
 	// s := read()
-	v_max := 0
-	sli := make([][]int, n+1)
-	for i:=1; i <= n; i++ {
-		sli[i] = readSli(2)
-		v_max += sli[i][1]
+
+	sli := make([][]int, n)
+	for i:=0; i < n; i++ {
+		sli[i] = readSli(3)
 	}
 
-	dp := make([][]int, n+1)
-	dp[0] = make([]int, 100_000 +1)
-	v_sum := 0
-	for i:=1; i <= n; i++ {
-		dp[i] = make([]int, 100_000 +1)
-		ns := sli[i]
-		v_sum += ns[1]
-		for j:=1; j <= 100_000; j++ {
-			if ns[1] > j {
-				// 重さが少なく、交換する場合
-				before := dp[i -1][j]
-				dp[i][j] = Min(before, ns[0])
-			} else {
-				if v_sum < j {
-					// 最大値を超えたら終了
-					break
-				}
-				// 入れる or 入れないの最少
-				in := dp[i -1][j - ns[1]] + ns[0]
-				not_in := dp[i -1][j]
-				dp[i][j] = Min(in, not_in)
-			}
-		}
-	}
+    dp :=make([][]int, n)
 
-	ans := 0
-	for i:=100_000; i > 0; i--{
-		if dp[n][i] <= w && dp[n][i] > 0 {
-			ans = i
-			break
-		}
-	}
+    dp[0] = make([]int, 3)
+    dp[0][0] = sli[0][0]
+    dp[0][1] = sli[0][1]
+    dp[0][2] = sli[0][2]
+    for i:=1; i<n; i++ {
+        dp[i] = make([]int, 3)
+        a := Max(dp[i -1][1], dp[i -1][2]) + sli[i][0]
+        b := Max(dp[i -1][0], dp[i -1][2]) + sli[i][1]
+        c := Max(dp[i -1][0], dp[i -1][1]) + sli[i][2]
+        dp[i][0] = a
+        dp[i][1] = b
+        dp[i][2] = c
+    }
+
+
 	// ans := sli
-	// p(dp[n])
+    ans := Max(Max(dp[n -1][0], dp[n -1][1]), dp[n -1][2])
 	return ans
 }
 
@@ -141,12 +125,6 @@ func Max(x, y int) int {
 }
 
 func Min(x, y int) int {
-	if x == 0 {
-		x = 100_000_000_000
-	}
-	if y == 0 {
-		y = 100_000_000_000
-	}
 	if x < y {
 		return x
 	}

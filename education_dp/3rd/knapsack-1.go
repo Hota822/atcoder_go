@@ -22,49 +22,37 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
-	n, w := readInt(), readInt()
+	n := readInt()
+    w := readInt()
 	// s := read()
-	v_max := 0
-	sli := make([][]int, n+1)
-	for i:=1; i <= n; i++ {
-		sli[i] = readSli(2)
-		v_max += sli[i][1]
+
+	sli := make([][]int, n)
+	for i:=0; i < n; i++ {
+		sli[i] = readSli(2) // [weight, value]
 	}
 
-	dp := make([][]int, n+1)
-	dp[0] = make([]int, 100_000 +1)
-	v_sum := 0
-	for i:=1; i <= n; i++ {
-		dp[i] = make([]int, 100_000 +1)
-		ns := sli[i]
-		v_sum += ns[1]
-		for j:=1; j <= 100_000; j++ {
-			if ns[1] > j {
-				// 重さが少なく、交換する場合
-				before := dp[i -1][j]
-				dp[i][j] = Min(before, ns[0])
-			} else {
-				if v_sum < j {
-					// 最大値を超えたら終了
-					break
-				}
-				// 入れる or 入れないの最少
-				in := dp[i -1][j - ns[1]] + ns[0]
-				not_in := dp[i -1][j]
-				dp[i][j] = Min(in, not_in)
-			}
-		}
-	}
+    dp:= make([][]int, w + 1)
 
-	ans := 0
-	for i:=100_000; i > 0; i--{
-		if dp[n][i] <= w && dp[n][i] > 0 {
-			ans = i
-			break
-		}
-	}
-	// ans := sli
-	// p(dp[n])
+    dp[0] = make([]int, n + 1,)
+
+    // weight
+    for i:=1; i<=w; i++ {
+        // into number of n or not
+        dp[i] = make([]int, n + 1)
+        for j:=1; j<=n; j++ {
+
+            wei:= sli[j -1][0]
+            // 入れない
+            if i - wei < 0 {
+                dp[i][j] = dp[i][j -1]
+                continue
+            }
+            // 入れた時の最大 = j からweiを引いた値に今のvalを足す
+            before := dp[i -wei][j -1] + sli[j -1][1]
+            dp[i][j] = Max(dp[i][j -1], before)
+        }
+    }
+	ans := dp[w][n]
 	return ans
 }
 
@@ -141,12 +129,6 @@ func Max(x, y int) int {
 }
 
 func Min(x, y int) int {
-	if x == 0 {
-		x = 100_000_000_000
-	}
-	if y == 0 {
-		y = 100_000_000_000
-	}
 	if x < y {
 		return x
 	}

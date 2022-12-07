@@ -23,24 +23,30 @@ var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
 	n := readInt()
-    k := readInt()
+	k := readInt()
 	// s := read()
 
 	sli := make([]int, n)
 	// for i:=0; i < n; i++ {
-    sli = readSli(n)
-    dp := make([][]int, n)
-    for j:=0; j<k; k++ {
-        for i:=2; i<n; i++ {
-            i1 := dp[i -1] + Abs(sli[i] - sli[i -1])
-            i2 := dp[i -2] + Abs(sli[i] - sli[i -2])
-            dp[i] = Min(i1, i2)
-            p(dp[i])
+	sli = readSli(n)
+	dp := make([]int, n)
+	dp[0] = 0
+    // j番目
+	for j:=1; j<n; j++ {
+        // i個前
+        for i:=1; i<=k; i++ {
+            if j -i < 0 { break }
+            cost := dp[j -i] + Abs(sli[j] - sli[j -i])
+            if i == 1 {
+                dp[j] = cost
+            }
+            if dp[j] > cost {
+                dp[j] = cost
+            }
         }
     }
 
-	// }
-
+	//
 	ans := dp[n -1]
 	return ans
 }
