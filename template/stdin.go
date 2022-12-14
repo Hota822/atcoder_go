@@ -6,7 +6,7 @@ import (
 )
 
 const (
-    // maxBufSize = 100000
+// maxBufSize = 100000
 )
 
 var sc = bufio.NewScanner(os.Stdin)
@@ -20,29 +20,29 @@ func main() {
 // scan
 func ReadInt64() int64 {
 	var ret int64
-    sc.Scan()
-    ret, _ = strconv.ParseInt(sc.Text(), 10, 64)
-    return ret
+	sc.Scan()
+	ret, _ = strconv.ParseInt(sc.Text(), 10, 64)
+	return ret
 }
 
 func ReadInt() int {
 	var ret int
-    sc.Scan()
-    ret, _ = strconv.Atoi(sc.Text())
-    return ret
+	sc.Scan()
+	ret, _ = strconv.Atoi(sc.Text())
+	return ret
 }
 
 func readInt() int {
-    b := sc.Scan()
-    ret, _ := strconv.Atoi(sc.Text())
+	b := sc.Scan()
+	ret, _ := strconv.Atoi(sc.Text())
 	if !b {
-        panic()
-    }
-    return ret
+		panic()
+	}
+	return ret
 }
 
 func next() string {
 	sc.Scan()
-    ret := sc.Text()
-    return ret
+	ret := sc.Text()
+	return ret
 }
