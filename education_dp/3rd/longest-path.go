@@ -20,90 +20,54 @@ const (
 )
 
 var sc = bufio.NewScanner(os.Stdin)
+var dp []int
+var xy map[int][]int
+var n int
 
 func run() interface{} {
-	n := readInt()
+	n = readInt()
 	m := readInt()
-	// s := read()
 
-	// dp := make([][]int, n)
-	// for i := 0; i < n; i++ {
-	// 	dp[i] = make([]int, n)
-	// }
-	// mp := map[int][][]int{}
-
-	xy := make([][]int, m)
+	dp = initSliceAs(n+1, -1)
+	xy = make(map[int][]int, m+1)
 	for i := 0; i < m; i++ {
-		xy[i] = readSli(2)
+		x := readInt()
+		y := readInt()
+		xy[x] = append(xy[x], y)
 	}
 
-	sy := make([]int, n)
-
-	for i := 0; i < 2; i++ {
-		for _, v := range xy {
-
-			x := v[0]
-			y := v[1]
-
-			// max_path = sy[x] + 1
-			max_path := sy[x-1] + 1
-			current_max_of_y := sy[y-1]
-			// dp[x-1][y-1] = max_path
-			if current_max_of_y < max_path {
-				sy[y-1] = max_path
-			}
-			// p(x, y, sy, dp)
-		}
-	}
-
-	// p(sy)
 	ans := 0
-	for _, v := range sy {
-		if ans < v {
-			ans = v
-		}
+	for x := 1; x <= n; x++ {
+		// if _, ys:= xy[x]; ok {
+		ans = Max(ans, Rec(x))
 	}
 
 	return ans
 }
 
-// 4 5
-// 1 2
-// 1 3
-// 3 2
-// 2 4
-// 3 4
+func Rec(x int) int {
+	if dp[x] > -1 {
+		// メモ済み
+		return dp[x]
+	}
+	max := 0
+	for _, y := range xy[x] {
+		// sli = append(sli, Rec(y)+1)
+		max = Max(max, Rec(y)+1)
+	}
+	dp[x] = max
+	return max
+	// return MaxSli(sli)
+}
 
-// before
-//    1 2 3 4 y sy
-// 1  0 1 1 0
-// 2  0 0 0 0
-// 3  0 2 0 0
-// 4  0 0 0 0
-// x
-//
-// sy 0 1 1 0
-
-// 5 8
-// 5 3
-// 2 3
-// 2 4
-// 5 2
-// 5 1
-// 1 4
-// 4 3
-// 1 3
-
-// before
-//    1 2 3 4 5 y  sx
-// 1  0 0 2 2 0     2
-// 2  0 0 2 2 0     2
-// 3  0 0 0 0 0     0
-// 4  0 0 3 0 0     3
-// 5  1 1 1 0 0     1
-// x
-//
-// sy 1 1 3 2 0
+func initSliceAs(len, val int) []int {
+	sli := make([]int, len)
+	sli[0] = val
+	for i := 1; i < len; i *= 2 {
+		copy(sli[i:], sli[:i])
+	}
+	return sli
+}
 
 // ========================read
 // func read() string {
