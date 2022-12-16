@@ -14,6 +14,10 @@ func Pow(x, y int) float64 {
 	// return x^y
 }
 
+func RoundUp(x, y int) int {
+    return (x + y -1 )/y
+}
+
 import {
 	"sort"
 }

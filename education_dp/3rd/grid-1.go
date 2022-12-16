@@ -6,6 +6,7 @@ import (
 	"os"
 	"runtime"
 	"strconv"
+	"strings"
 	// "strings"
 	// "math"
 	// "reflect"
@@ -22,23 +23,55 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
-	n := readInt()
+	h := readInt()
+	w := readInt()
 	// s := read()
+	prime := 1000_000_007
 
-	sli := make([][]int, n)
-	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+	sli := make([][]string, h)
+	for i := 0; i < h; i++ {
+		sli[i] = strings.Split(read(), "")
 	}
 
-	ans := sli
+	dp := make([][]int, h+1)
+	// dp[0] = make([]int, w)
+
+	// lastSharp := 0
+	dp[0] = make([]int, w+1)
+	dp[0][1] = 1
+	for i := 1; i <= h; i++ {
+		dp[i] = make([]int, w+1)
+		for j := 1; j <= w; j++ {
+			if sli[i-1][j-1] == "." {
+				dp[i][j] = (dp[i-1][j] + dp[i][j-1]) % prime
+			} else {
+				dp[i][j] = 0
+			}
+		}
+	}
+	//   1 2 3 4
+	// 1 1 1 1 0
+	// 2 1 0 1 1
+	// 3 1 1 2 3
+
+	// 1列目：１
+	//      ＃を保持
+	// ２列目：
+	//      左、上を見て和を取る
+	//
+
+	// sum
+
+	// p(dp)
+	ans := dp[h][w]
 	return ans
 }
 
 // ========================read
-// func read() string {
-// 	sc.Scan()
-//     return sc.Text()
-// }
+func read() string {
+	sc.Scan()
+	return sc.Text()
+}
 
 // func readSli(n int) []string {
 func readSli(n int) []int {
@@ -123,18 +156,11 @@ func p(arg ...interface{}) {
 	s := strconv.Itoa(l)
 	fmt.Println("dumped at line: " + s + ", value: ")
 	for _, v := range arg {
+		fmt.Println(v)
 		if dp, ok := v.([][]int); ok {
 			for _, v := range dp {
 				fmt.Println(v)
 			}
-			continue
 		}
-		if dp, ok := v.([][]float64); ok {
-			for _, v := range dp {
-				fmt.Println(v)
-			}
-			continue
-		}
-		fmt.Println(v)
 	}
 }

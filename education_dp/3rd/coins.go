@@ -24,13 +24,42 @@ var sc = bufio.NewScanner(os.Stdin)
 func run() interface{} {
 	n := readInt()
 	// s := read()
+	p_sli := make([]float64, n+1)
 
-	sli := make([][]int, n)
-	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+	// sli := make([][]int, n)
+	dp := make([][]float64, n+1)
+	dp[0] = make([]float64, n+1)
+	dp[0][0] = 1
+	for i := 1; i <= n; i++ {
+		p_sli[i] = readFloat()
 	}
 
-	ans := sli
+	// i枚目のコインまでで
+	for i := 1; i <= n; i++ {
+		dp[i] = make([]float64, n+1)
+		// j枚表が出る確率を記録
+		for j := 0; j <= n; j++ {
+			if j == 0 {
+				// 全て裏
+				dp[i][0] = dp[i-1][0] * (1 - p_sli[i])
+			} else {
+				// 今回が表 > 前回まで j -1の数出ていて、今回表
+				t := dp[i-1][j-1] * p_sli[i]
+				// 今回が裏 > 前回まで j出ていて、今回裏
+				f := dp[i-1][j] * (1 - p_sli[i])
+				dp[i][j] = t + f
+			}
+
+		}
+	}
+
+	// ans := p_sli
+	ans := 0.0
+	require := n/2 + 1
+	for i := n; i >= require; i-- {
+		ans += dp[n][i]
+	}
+
 	return ans
 }
 
@@ -49,6 +78,12 @@ func readSli(n int) []int {
 		sli[i] = readInt()
 	}
 	return sli
+}
+
+func readFloat() float64 {
+	sc.Scan()
+	ret, _ := strconv.ParseFloat(sc.Text(), 64)
+	return ret
 }
 
 func readInt() int {
