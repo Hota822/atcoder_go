@@ -46,3 +46,9 @@ func next() string {
 	ret := sc.Text()
 	return ret
 }
+
+func readFloat() float64 {
+	sc.Scan()
+	ret, _ := strconv.ParseFloat(sc.Text(), 64)
+	return ret
+}
