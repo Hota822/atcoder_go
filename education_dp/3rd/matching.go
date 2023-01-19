@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math/bits"
 	"os"
 	"runtime"
 	"strconv"
@@ -16,85 +17,79 @@ const (
 	max_bufSize = 1_000_000_000 // default: 65536
 	initial_buf = 10000
 	// max_int32 = 2147483647
-	max_int64 = 9223372036854775807
-	// prime_number = 1000_000_007
+	// max_int64 = 9223372036854775807
+	prime_number = 1000_000_007
 )
 
 var sc = bufio.NewScanner(os.Stdin)
-var dp [][]int
-var sli []int
-var flag [][]int
-var sum []int
 
 func run() interface{} {
 	n := readInt()
-	// s := read()
 
-	sli = readSli(n)
-	sum = make([]int, n+1)
+	sli := make([][]int, n)
 	for i := 0; i < n; i++ {
-		sum[i+1] += sli[i] + sum[i]
+		sli[i] = readSli(n)
 	}
 
-	// dp[L][R]
-	dp = make([][]int, n)
-	flag = make([][]int, n)
+	dp := make([]int, 1<<n)
+	dp[0] = 1
+	for S := 0; S < 1<<n; S++ {
+		if dp[S] == 0 {
+			continue
+		}
 
-	for i := 0; i < n; i++ {
-		dp[i] = make([]int, n)
-		flag[i] = make([]int, n)
+		// fmt.Print("S: ")
+		// fmt.Print(S)
+		// fmt.Print(", S(2): ")
+		// fmt.Printf("%b", S)
+		// fmt.Println()
+
+		// 立っているビット数をカウント > マッチした人数
+		// i = 0, 1, 2, 3, 4...
+		i := bits.OnesCount(uint(S))
+		for j := 0; j < n; j++ {
+			// e.g. S=0100, j=1
+			// S>>j = 0010, S>>j&1 = 0, S>>j&1 == false
+			if S>>j&1 == 1 {
+				if i == 1 {
+
+					fmt.Print("S: ")
+					fmt.Print(S)
+					fmt.Print(", S(2): ")
+					fmt.Printf("%b", S)
+					fmt.Print(", j: ")
+					fmt.Print(j)
+					fmt.Print(", S>>j: ")
+					fmt.Printf("%b", S>>j)
+					fmt.Println()
+					// ps([]string{"S", "S>>j", "S>>j&1"}, S, S>>j, S>>j&1)
+				}
+				continue
+			}
+
+			// if i == 0 {
+			// 	p(1)
+			// }
+			if sli[i][j] == 1 {
+				dp[S|1<<j] += dp[S]
+				dp[S|1<<j] %= prime_number
+			}
+		}
 	}
 
-	ans := calculate(0, n-1)
+	ans := dp[1<<n-1]
+
 	return ans
 }
 
-func calculate(l, r int) int {
-	// p(r+1, l+1)
-	if flag[l][r] == 1 {
-		return dp[l][r]
-	}
+// S==0, into j loop, set
 
-	flag[l][r] = 1
-
-	if l == r {
-		return 0
-	}
-
-	min := max_int64
-	for i := l; i < r; i++ {
-		// divide point
-		div := i
-		min = Min(min, calculate(l, div)+calculate(div+1, r))
-	}
-
-	// p(Sum(l, r), min)
-	dp[l][r] = min + Sum(l, r)
-
-	return dp[l][r]
-}
-
-func Sum(l, r int) int {
-	// p(sum[r+1], sum[l])
-	return sum[r+1] - sum[l]
-}
-
-// 3
-// 10 10 10
-// 10 10
-
-// 1 2 3 4
-
-// c(1,4)
-// l,r = 1,4
-//   for
-//     c(1,1)+c(2,4) = 1 + c(2,4)
-//       for c(2,4)
-//         [1]= c(2,2)+c(3,4) = 2+7(7) = 9(16)
-//         [2]= c(2,3)+c(4,4) = 5(5)+4 = 9(14)
-//         c(2,4) = 9(14) dp(1,3)= 14
-//     = 1 + 9 = 10
-//
+// 4
+//i\j
+// 0 1 0 0
+// 0 0 0 1
+// 1 0 0 0
+// 0 0 1 0
 
 // ========================read
 // func read() string {
@@ -199,4 +194,17 @@ func p(arg ...interface{}) {
 		}
 		fmt.Println(v)
 	}
+}
+
+func ps(header []string, arg ...interface{}) {
+	_, _, l, _ := runtime.Caller(1)
+	s := strconv.Itoa(l)
+	fmt.Println("dumped at line: " + s + ", value: ")
+	for idx, v := range arg {
+		fmt.Print(header[idx])
+		fmt.Print(": ")
+		fmt.Print(v)
+		fmt.Print(", ")
+	}
+	fmt.Println()
 }

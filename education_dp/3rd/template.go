@@ -16,6 +16,7 @@ const (
 	max_bufSize = 1_000_000_000 // default: 65536
 	initial_buf = 10000
 	// max_int32 = 2147483647
+	// max_int64 = 9223372036854775807
 	// prime_number = 1000_000_007
 )
 
@@ -137,4 +138,17 @@ func p(arg ...interface{}) {
 		}
 		fmt.Println(v)
 	}
+}
+
+func ps(header []string, arg ...interface{}) {
+	_, _, l, _ := runtime.Caller(1)
+	s := strconv.Itoa(l)
+	fmt.Println("dumped at line: " + s + ", value: ")
+	for idx, v := range arg {
+		fmt.Print(header[idx])
+		fmt.Print(": ")
+		fmt.Print(v)
+		fmt.Print(", ")
+	}
+	fmt.Println()
 }
