@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math/bits"
 	"os"
 	"runtime"
 	"strconv"
@@ -22,65 +21,77 @@ const (
 )
 
 var sc = bufio.NewScanner(os.Stdin)
+var tree map[int]*Node
+
+type Node struct {
+	links []int
+}
+
+var dp [][]int
+var memo []int
 
 func run() interface{} {
 	n := readInt()
+	// s := read()
 
-	sli := make([][]int, n)
-	for i := 0; i < n; i++ {
-		sli[i] = readSli(n)
+	if n == 1 {
+		return 2
+	}
+	memo = make([]int, n+1)
+	makeTree(n)
+
+	dp = make([][]int, n+1)
+	for i := 0; i <= n; i++ {
+		dp[i] = make([]int, 2)
 	}
 
-	dp := make([]int, 1<<n)
-	dp[0] = 1
-	// S: マッチした女のビット集合
-	for S := 0; S < 1<<n; S++ {
-		// S==0の時、マッチしても追加する値が0なのでスキップ可能
-		if dp[S] == 0 {
-			continue
-		}
+	calculate(1, 0)
 
-		// 立っているビット数をカウント > マッチした人数
-		// i = 0, 1, 2, 3, 4...
-		i := bits.OnesCount(uint(S))
-		for j := 0; j < n; j++ {
-			// j番目のビットを確認し、既にマッチ済みの時はスキップ
-			if S>>j&1 == 1 {
-				continue
-			}
-
-			// i番目の男とj番目の女が相性がいいとき
-			if sli[i][j] == 1 {
-				// j番目の女とマッチング（ビットを立てる）
-				// そこにマッチ前の場合の数を入れる
-				dp[S|1<<j] += dp[S]
-				dp[S|1<<j] %= prime_number
-			}
-		}
-	}
-
-	ans := dp[1<<n-1]
-
+	ans := (dp[1][0] + dp[1][1]) % prime_number
 	return ans
 }
 
-// 3
-//i\j
-// 0 1 1
-// 1 0 1
-// 1 1 1
-// S==0, into j loop
-//   j=0 S>>j == 0 > sli[i][j] == 0, skip
-//   j=1 same      > S|1<<j = 10(2) == 2, dp[S|1<<j]++
-//   j=2 same      > S|1<<j = 100(2) == 4, dp[S|1<<j]++
-//   dp = [1 0 1 0 1 0 0 0]
-// S==1, i == 1, dp[S] == 0, continue
-// S==2, i == 1, dp[S] == 1, into j loop
-//   j=0 S>>j == 10(2)>>0 !=0, > S|1<<j = 11(2) == 3, dp[S|1<<j]++
-//   j=1 S>>j == 10(2)>>1 == 1, skip
-//   j=2 S>>j == 10(2)>>2 !=0, > S|1<<2 = 110 == 6, dp[S|1<<j]++
-//   dp = [1 0 1 1 1 0 1 0]
-// S==3, 4, 5 ...
+func calculate(root int, parent int) {
+	if memo[root] == 1 {
+		p()
+		return
+	}
+	memo[root] = 1
+
+	dp[root][0] = 1
+	dp[root][1] = 1
+	// ps([]string{"root", "links"}, root, tree[root].links)
+	// p(dp)
+	for _, leaf := range tree[root].links {
+		if leaf == root || leaf == parent {
+			continue
+		}
+
+		calculate(leaf, root)
+		// for white
+		dp[root][0] = dp[root][0] * (dp[leaf][0] + dp[leaf][1]) % prime_number
+		// for black
+		dp[root][1] = dp[root][1] * dp[leaf][0] % prime_number
+	}
+}
+
+func makeTree(n int) {
+	tree = map[int]*Node{}
+	// tree_count := make([]int, n+1)
+
+	createNode := func(x, y int) {
+		if _, ok := tree[x]; ok {
+			tree[x].links = append(tree[x].links, y)
+		} else {
+			tree[x] = &Node{links: []int{y}}
+		}
+	}
+	for i := 0; i < n-1; i++ {
+		x, y := readInt(), readInt()
+		createNode(x, y)
+		createNode(y, x)
+	}
+}
 
 // ========================read
 // func read() string {
