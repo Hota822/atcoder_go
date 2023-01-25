@@ -45,8 +45,7 @@ type SegmentTree struct {
 	data        []int
 	element_num int
 }
-
-func getMax(x, y int, tree SegmentTree) int {
+func (tree SegmentTree) getMax(x, y int) int {
 	var get func(x, y, l, r, k int) int
 	get = func(x, y, l, r, k int) int {
 		if x <= l && r <= y { // 範囲内
@@ -58,4 +57,32 @@ func getMax(x, y int, tree SegmentTree) int {
 		}
 	}
 	return get(x, y, 0, tree.element_num, 0)
+}
+
+func newSegmentTree(n int) SegmentTree {
+	n2 := 1
+	// 2^nの要素数となるように計算
+	for n2 <= n {
+		n2 *= 2
+	}
+	st := SegmentTree{element_num: n}
+	st.data = make([]int, n+1)
+	// p(len(st.data), n)
+	return st
+}
+
+func (tree SegmentTree) getMax(idx int) int {
+	max := 0
+	for i := idx; i > 0; {
+		max = Max(max, tree.data[i])
+		i -= i & -i
+	}
+	return max
+}
+
+func (tree SegmentTree) update(idx, val int) {
+	for i := idx; i <= tree.element_num; {
+		tree.data[i] = Max(val, tree.data[i])
+		i += i & -i
+	}
 }
