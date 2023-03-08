@@ -1,7 +1,7 @@
 package sort
 
 // integer
-func Ints (slice []int) []int {
+func Ints(slice []int) []int {
 	// return sorted slice
 }
 
@@ -11,7 +11,7 @@ func Ints (slice []int) []int {
 // e.g. order by ascending
 
 type card struct {
-	num   int
+	num    int
 	coords int
 }
 
@@ -28,17 +28,18 @@ type SortBy []card
 // 	sort.Sort(SortBy(as))
 // }
 
-
 // sample-----------------------
 // sort []string (length is constant)
 func (a SortBy) Less(i, j int) bool {
-	ai,  aj := a[i], a[j]
+	ai, aj := a[i], a[j]
 	var x int
-	for x=0; i < sli_len; i++ {
+	for x = 0; i < sli_len; i++ {
 		if ai[x] == aj[x] {
 			continue
 		}
 		break
 	}
-	return  ai[x] < aj[x]
+	return ai[x] < aj[x]
 }
+
+// topological sort
