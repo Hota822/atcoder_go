@@ -1,0 +1,62 @@
+// topologicalSort performs a topological sort on the given directed acyclic graph (DAG)
+// represented as an adjacency list. Returns a list of nodes in topologically sorted order.
+// Returns an error if the graph contains a cycle.
+func topologicalSort(adjList map[int][]int) ([]int, error) {
+    // count the number of incoming edges for each node
+    incomingEdges := make(map[int]int)
+    for _, neighbours := range adjList {
+        for _, node := range neighbours {
+            incomingEdges[node]++
+        }
+    }
+
+    // initialize a queue with all nodes that have no incoming edges
+    queue := make([]int, 0)
+    for node := range adjList {
+        if incomingEdges[node] == 0 {
+            queue = append(queue, node)
+        }
+    }
+
+    // perform the topological sort
+    sorted := make([]int, 0)
+    for len(queue) > 0 {
+        // remove a node from the queue and add it to the sorted list
+        node := queue[0]
+        queue = queue[1:]
+        sorted = append(sorted, node)
+
+        // decrement the incoming edge count of each neighbour of the removed node
+        for _, neighbour := range adjList[node] {
+            incomingEdges[neighbour]--
+            // add the neighbour to the queue if it has no more incoming edges
+            if incomingEdges[neighbour] == 0 {
+                queue = append(queue, neighbour)
+            }
+        }
+    }
+
+    // if there are any nodes remaining with incoming edges, then the graph contains a cycle
+    for node, incoming := range incomingEdges {
+        if incoming > 0 {
+            return nil, fmt.Errorf("graph contains a cycle at node %v", node)
+        }
+    }
+
+    return sorted, nil
+}
+
+
+adjList := map[int][]int{
+    1: {2, 3},
+    2: {3, 4},
+    3: {4},
+    4: {},
+}
+
+sorted, err := topologicalSort(adjList)
+if err != nil {
+    fmt.Println("Error:", err)
+} else {
+    fmt.Println("Topologically sorted order:", sorted)
+}

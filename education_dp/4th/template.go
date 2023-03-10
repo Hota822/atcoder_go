@@ -144,6 +144,31 @@ func p(arg ...interface{}) {
 	}
 }
 
+func pr(arg ...interface{}) {
+	for _, v := range arg {
+		if dp, ok := v.([][]int); ok {
+			for _, v := range dp {
+				fmt.Print(v)
+			}
+			continue
+		}
+		if dp, ok := v.([][]float64); ok {
+			for _, v := range dp {
+				fmt.Print(v)
+			}
+			continue
+		}
+		fmt.Print(v)
+	}
+	fmt.Println()
+}
+
+func pl(arg ...interface{}) {
+	fmt.Println()
+
+	pr(arg...)
+}
+
 func ps(header []string, arg ...interface{}) {
 	_, _, l, _ := runtime.Caller(1)
 	s := strconv.Itoa(l)

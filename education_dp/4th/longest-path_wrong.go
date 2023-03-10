@@ -30,56 +30,29 @@ func run() interface{} {
 	n, m := readInt(), readInt()
 	// s := read()
 
-	// p("init graph")
-	graph := make(map[int]*Node)
-	for i := 1; i <= n; i++ {
-		graph[i] = &Node{next: map[int]struct{}{}, deg: 0, self: i}
-	}
-	// p("read value, set to graph")
+	sli := make([][]int, m)
 	for i := 0; i < m; i++ {
-		from, to := readInt(), readInt()
-		// graph[to].next[from] = struct{}{}
-		graph[from].next[to] = struct{}{}
-		graph[to].deg++
+		sli[i] = readSli(2)
 	}
 
-	// p("get start vertex")
-	var queue []*Node
-	for _, node := range graph {
-		if node.deg == 0 {
-			queue = append(queue, node)
-		}
-	}
-
-	// p("topological sort")
-	for i := 0; i < len(queue); i++ {
-		node := queue[i]
-		delete(graph, node.self)
-
-		for idx := range node.next {
-			// pr(false, idx)
-			(graph[idx].deg)--
-			if graph[idx].deg == 0 {
-				queue = append(queue, graph[idx])
-			}
-		}
-	}
-
-	// p("calculate max")
-	dp := make([]int, n)
+	dp := make([][]int, n)
+	max_sli := make([]int, n)
 	for i := 0; i < n; i++ {
-		node := queue[i]
-		for j := range node.next {
-			dp[j-1] = Max(dp[j-1], dp[node.self-1]+1)
-		}
+		dp[i] = make([]int, n)
 	}
 
-	// p("get max")
-	ans := 0
-	for i := 0; i < n; i++ {
-		ans = Max(ans, dp[i])
+	for i := 0; i < m; i++ {
+		from, to := sli[i][0]-1, sli[i][1]-1
+		path := max_sli[from]
+		dp[from][to] = path + 1
+		max_sli[to] = Max(max_sli[to], path+1)
 	}
-	return ans
+	max := 0
+	for i := 0; i < n; i++ {
+		max = Max(max_sli[i], max)
+	}
+
+	return max
 }
 
 // 99999
