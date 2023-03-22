@@ -22,72 +22,43 @@ const (
 
 var sc = bufio.NewScanner(os.Stdin)
 
-// var dp [][]int
 // var sli []int
 // var memo [][]int
-
-type Node struct {
-	self int              // 自身の番号
-	next map[int]struct{} // 隣接している、矢印の先の頂点の番号
-	deg  int              // 入次数
-}
+var dp []int
+var xy map[int][]int
 
 func run() interface{} {
 	n, m := readInt(), readInt()
 
-	// グラフの初期化
-	graph := make(map[int]*Node)
-	for i := 1; i <= n; i++ {
-		graph[i] = &Node{next: map[int]struct{}{}, deg: 0, self: i}
-	}
-	// 経路の読込
+	// x: from node
+	// y: to nodes list
+	xy = make(map[int][]int, n)
 	for i := 0; i < m; i++ {
-		from, to := readInt(), readInt()
-		graph[from].next[to] = struct{}{}
-		graph[to].deg++
+		x, y := readInt()-1, readInt()-1
+		xy[x] = append(xy[x], y)
 	}
 
-	// トポロジカルソート実行----------------------
-	// 既に処理可能なノードをキューに入れる
-	var queue []*Node
-	for _, node := range graph {
-		if node.deg == 0 {
-			queue = append(queue, node)
-		}
-	}
+	// メモ＋最大値の保存に利用するため、-1で初期化
+	dp = initSliceAs(n, -1)
 
-	// キューの先頭から処理していく
-	for i := 0; i < len(queue); i++ {
-		node := queue[i]
-		// グラフから頂点を削除する
-		delete(graph, node.self)
-
-		for idx := range node.next {
-			// 矢印の先の入次数を減らす
-			(graph[idx].deg)--
-			// 入次数が0のとき、キューに追加する
-			if graph[idx].deg == 0 {
-				queue = append(queue, graph[idx])
-			}
-		}
-	}
-	// トポロジカルソート終了----------------------
-
-	// 最大値を保持し、計算する
-	dp := make([]int, n)
-	for i := 0; i < n; i++ {
-		node := queue[i]
-		for j := range node.next {
-			dp[j-1] = Max(dp[j-1], dp[node.self-1]+1)
-		}
-	}
-
-	// 全ての中での最大値を取得する
 	ans := 0
-	for i := 0; i < n; i++ {
-		ans = Max(ans, dp[i])
+	for x := 0; x < n; x++ {
+		ans = Max(ans, calculate(x))
 	}
 	return ans
+}
+
+func calculate(x int) int {
+	if dp[x] > -1 {
+		return dp[x]
+	}
+
+	max := 0
+	for _, v := range xy[x] {
+		max = Max(calculate(v)+1, max)
+	}
+	dp[x] = max
+	return max
 }
 
 // ========================read
@@ -95,6 +66,15 @@ func run() interface{} {
 // 	sc.Scan()
 //     return sc.Text()
 // }
+
+func initSliceAs(len, val int) []int {
+	sli := make([]int, len)
+	sli[0] = val
+	for i := 1; i < len; i *= 2 {
+		copy(sli[i:], sli[:i])
+	}
+	return sli
+}
 
 // func readSli(n int) []string {
 func readSli(n int) []int {

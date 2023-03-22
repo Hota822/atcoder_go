@@ -62,6 +62,12 @@ func readInt() int {
 	return ret
 }
 
+func readFloat() float64 {
+	sc.Scan()
+	ret, _ := strconv.ParseFloat(sc.Text(), 64)
+	return ret
+}
+
 // =======================main========================
 func main() {
 	buf := make([]byte, initial_buf)
@@ -149,16 +155,19 @@ func pr(arg ...interface{}) {
 		if dp, ok := v.([][]int); ok {
 			for _, v := range dp {
 				fmt.Print(v)
+				fmt.Print(", ")
 			}
 			continue
 		}
 		if dp, ok := v.([][]float64); ok {
 			for _, v := range dp {
 				fmt.Print(v)
+				fmt.Print(", ")
 			}
 			continue
 		}
 		fmt.Print(v)
+		fmt.Print(", ")
 	}
 	fmt.Println()
 }

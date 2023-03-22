@@ -28,28 +28,24 @@ var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
 	n, m := readInt(), readInt()
-	// s := read()
 
+	// 経路読込
 	sli := make([][]int, m)
 	for i := 0; i < m; i++ {
 		sli[i] = readSli(2)
 	}
 
-	dp := make([][]int, n)
-	max_sli := make([]int, n)
-	for i := 0; i < n; i++ {
-		dp[i] = make([]int, n)
-	}
+	dp := make([]int, n)
 
 	for i := 0; i < m; i++ {
 		from, to := sli[i][0]-1, sli[i][1]-1
-		path := max_sli[from]
-		dp[from][to] = path + 1
-		max_sli[to] = Max(max_sli[to], path+1)
+		path := dp[from]
+		// 最大値を保持
+		dp[to] = Max(dp[to], path+1)
 	}
 	max := 0
 	for i := 0; i < n; i++ {
-		max = Max(max_sli[i], max)
+		max = Max(dp[i], max)
 	}
 
 	return max

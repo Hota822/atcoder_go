@@ -22,72 +22,44 @@ const (
 
 var sc = bufio.NewScanner(os.Stdin)
 
-// var dp [][]int
-// var sli []int
-// var memo [][]int
+func run() {
+	n, k := readInt(), readInt()
 
-type Node struct {
-	self int              // 自身の番号
-	next map[int]struct{} // 隣接している、矢印の先の頂点の番号
-	deg  int              // 入次数
-}
+	sli := readSli(n)
+	dp := make([]bool, k+1)
+	dp[0] = false
 
-func run() interface{} {
-	n, m := readInt(), readInt()
+	// i個の石で、j 番目まで使って勝負
+	// 1が勝っていたらdp = true
+	for i := 1; i <= k; i++ {
+		win := false
+		for j := 0; j < n; j++ {
+			x := sli[j]
 
-	// グラフの初期化
-	graph := make(map[int]*Node)
-	for i := 1; i <= n; i++ {
-		graph[i] = &Node{next: map[int]struct{}{}, deg: 0, self: i}
-	}
-	// 経路の読込
-	for i := 0; i < m; i++ {
-		from, to := readInt(), readInt()
-		graph[from].next[to] = struct{}{}
-		graph[to].deg++
-	}
-
-	// トポロジカルソート実行----------------------
-	// 既に処理可能なノードをキューに入れる
-	var queue []*Node
-	for _, node := range graph {
-		if node.deg == 0 {
-			queue = append(queue, node)
-		}
-	}
-
-	// キューの先頭から処理していく
-	for i := 0; i < len(queue); i++ {
-		node := queue[i]
-		// グラフから頂点を削除する
-		delete(graph, node.self)
-
-		for idx := range node.next {
-			// 矢印の先の入次数を減らす
-			(graph[idx].deg)--
-			// 入次数が0のとき、キューに追加する
-			if graph[idx].deg == 0 {
-				queue = append(queue, graph[idx])
+			// ちょうどとったら勝ち
+			if i-x == 0 {
+				win = true
+				break
 			}
-		}
-	}
-	// トポロジカルソート終了----------------------
 
-	// 最大値を保持し、計算する
-	dp := make([]int, n)
-	for i := 0; i < n; i++ {
-		node := queue[i]
-		for j := range node.next {
-			dp[j-1] = Max(dp[j-1], dp[node.self-1]+1)
+			// 取る量が多く操作できない
+			if i < x {
+				continue
+			}
+
+			// 相手に手番をわたした場合
+			//   > DPに格納されている値と逆の値になる
+			win = !dp[i-x] || win
 		}
+		dp[i] = win
 	}
 
-	// 全ての中での最大値を取得する
-	ans := 0
-	for i := 0; i < n; i++ {
-		ans = Max(ans, dp[i])
+	ans := dp[k]
+	if ans {
+		fmt.Println("First")
+	} else {
+		fmt.Println("Second")
 	}
-	return ans
 }
 
 // ========================read
@@ -113,13 +85,19 @@ func readInt() int {
 	return ret
 }
 
+func readFloat() float64 {
+	sc.Scan()
+	ret, _ := strconv.ParseFloat(sc.Text(), 64)
+	return ret
+}
+
 // =======================main========================
 func main() {
 	buf := make([]byte, initial_buf)
 	sc.Buffer(buf, max_bufSize)
 	sc.Split(bufio.ScanWords)
-	result := run()
-	print(result)
+	run()
+	// print(result)
 }
 
 func print(ans interface{}) {
@@ -200,16 +178,19 @@ func pr(arg ...interface{}) {
 		if dp, ok := v.([][]int); ok {
 			for _, v := range dp {
 				fmt.Print(v)
+				fmt.Print(", ")
 			}
 			continue
 		}
 		if dp, ok := v.([][]float64); ok {
 			for _, v := range dp {
 				fmt.Print(v)
+				fmt.Print(", ")
 			}
 			continue
 		}
 		fmt.Print(v)
+		fmt.Print(", ")
 	}
 	fmt.Println()
 }

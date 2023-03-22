@@ -22,73 +22,88 @@ const (
 
 var sc = bufio.NewScanner(os.Stdin)
 
-// var dp [][]int
-// var sli []int
-// var memo [][]int
+var dp [][][]float64
 
-type Node struct {
-	self int              // 自身の番号
-	next map[int]struct{} // 隣接している、矢印の先の頂点の番号
-	deg  int              // 入次数
-}
+// var memo map[string]bool
+var c []int
+var n int
 
 func run() interface{} {
-	n, m := readInt(), readInt()
+	n = readInt()
 
-	// グラフの初期化
-	graph := make(map[int]*Node)
-	for i := 1; i <= n; i++ {
-		graph[i] = &Node{next: map[int]struct{}{}, deg: 0, self: i}
-	}
-	// 経路の読込
-	for i := 0; i < m; i++ {
-		from, to := readInt(), readInt()
-		graph[from].next[to] = struct{}{}
-		graph[to].deg++
-	}
-
-	// トポロジカルソート実行----------------------
-	// 既に処理可能なノードをキューに入れる
-	var queue []*Node
-	for _, node := range graph {
-		if node.deg == 0 {
-			queue = append(queue, node)
-		}
-	}
-
-	// キューの先頭から処理していく
-	for i := 0; i < len(queue); i++ {
-		node := queue[i]
-		// グラフから頂点を削除する
-		delete(graph, node.self)
-
-		for idx := range node.next {
-			// 矢印の先の入次数を減らす
-			(graph[idx].deg)--
-			// 入次数が0のとき、キューに追加する
-			if graph[idx].deg == 0 {
-				queue = append(queue, graph[idx])
-			}
-		}
-	}
-	// トポロジカルソート終了----------------------
-
-	// 最大値を保持し、計算する
-	dp := make([]int, n)
+	c := make([]int, 4)
 	for i := 0; i < n; i++ {
-		node := queue[i]
-		for j := range node.next {
-			dp[j-1] = Max(dp[j-1], dp[node.self-1]+1)
-		}
+		idx := readInt()
+		c[idx]++
 	}
 
-	// 全ての中での最大値を取得する
-	ans := 0
-	for i := 0; i < n; i++ {
-		ans = Max(ans, dp[i])
+	dp = make([][][]float64, n+1)
+	for i := 0; i <= n; i++ {
+		dp[i] = make([][]float64, n+1)
+		for j := 0; j <= n; j++ {
+			dp[i][j] = make([]float64, n+1)
+		}
 	}
+	dp[1][0][0] = float64(n)
+
+	ans := calculate(0, c[1], c[2], c[3])
 	return ans
 }
+
+func calculate(c0, c1, c2, c3 int) float64 {
+	if dp[c1][c2][c3] != 0 {
+		return dp[c1][c2][c3]
+	}
+
+	// 期待値 = 0がない場合：それ以下の期待値＋１
+	//            ある場合：それ以下の期待値 + (残っている皿の数/全数)
+	var e float64
+	if c0 == 0 {
+		e = 1
+	} else {
+		e = float64(n) / float64(n-c0)
+	}
+
+	// それ以外の期待値 = 各cが１以上の時に計算可能
+	e1 := 0.0
+	if c1 > 0 {
+		e1 = float64(c1) / float64(n-c0) * calculate(c0+1, c1-1, c2, c3)
+	}
+
+	e2 := 0.0
+	if c2 > 0 {
+		e2 = float64(c2) / float64(n-c0) * calculate(c0, c1+1, c2-1, c3)
+	}
+
+	e3 := 0.0
+	if c3 > 0 {
+		e3 = float64(c3) / float64(n-c0) * calculate(c0, c1, c2+1, c3-1)
+	}
+
+	dp[c1][c2][c3] = e + e1 + e2 + e3
+	return dp[c1][c2][c3]
+}
+
+// 2
+// 1 2
+// 0 1 1 0 (110)
+// 1 0 1 0 (010)
+// 2 1 0 0 (100)
+// 0 2 0 0 (200)
+
+// 1 2
+// > 1 1 = cal(01) + 1 = 2 + 1 = 3
+//   > 0 1 = 2
+// > 0 2 = cal(01) + 2 = 2 + 2
+//   > 0 1 = 2
+
+// 3
+// 1 2 3
+
+// 0 1 1 1
+// 1 0 1 1 (0 2 3) > c1 -1, c0 +1
+// 0 2 0 1 (1 1 3) > c2 -1, c1 +1
+// 0 1 2 0 (1 2 2) > c3 -1, c2 +1
 
 // ========================read
 // func read() string {
@@ -110,6 +125,12 @@ func readSli(n int) []int {
 func readInt() int {
 	sc.Scan()
 	ret, _ := strconv.Atoi(sc.Text())
+	return ret
+}
+
+func readFloat() float64 {
+	sc.Scan()
+	ret, _ := strconv.ParseFloat(sc.Text(), 64)
 	return ret
 }
 

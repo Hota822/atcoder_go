@@ -22,73 +22,129 @@ const (
 
 var sc = bufio.NewScanner(os.Stdin)
 
-// var dp [][]int
-// var sli []int
-// var memo [][]int
+var dp [][][]int
+var sli []int
+var memo [][]bool
 
-type Node struct {
-	self int              // 自身の番号
-	next map[int]struct{} // 隣接している、矢印の先の頂点の番号
-	deg  int              // 入次数
-}
+// var dp [][]int
 
 func run() interface{} {
-	n, m := readInt(), readInt()
+	n := readInt()
+	// s := read()
 
-	// グラフの初期化
-	graph := make(map[int]*Node)
-	for i := 1; i <= n; i++ {
-		graph[i] = &Node{next: map[int]struct{}{}, deg: 0, self: i}
+	if n == 1 {
+		return readInt()
 	}
-	// 経路の読込
-	for i := 0; i < m; i++ {
-		from, to := readInt(), readInt()
-		graph[from].next[to] = struct{}{}
-		graph[to].deg++
-	}
+	// sli := make([][]int, n)
+	// // sli := make([][]int, n)
+	// for i := 0; i < n; i++ {
+	// 	sli[i] = readSli(2)
+	// }
+	sli = readSli(n)
 
-	// トポロジカルソート実行----------------------
-	// 既に処理可能なノードをキューに入れる
-	var queue []*Node
-	for _, node := range graph {
-		if node.deg == 0 {
-			queue = append(queue, node)
+	dp = make([][][]int, n+1)
+	memo = make([][]bool, n+1)
+	for i := 0; i <= n; i++ {
+		// dp[i] = make([]int, n+1)
+		dp[i] = make([][]int, n+1)
+		memo[i] = make([]bool, n+1)
+		for j := 0; j <= n; j++ {
+			dp[i][j] = make([]int, 3)
 		}
 	}
 
-	// キューの先頭から処理していく
-	for i := 0; i < len(queue); i++ {
-		node := queue[i]
-		// グラフから頂点を削除する
-		delete(graph, node.self)
-
-		for idx := range node.next {
-			// 矢印の先の入次数を減らす
-			(graph[idx].deg)--
-			// 入次数が0のとき、キューに追加する
-			if graph[idx].deg == 0 {
-				queue = append(queue, graph[idx])
-			}
-		}
-	}
-	// トポロジカルソート終了----------------------
-
-	// 最大値を保持し、計算する
-	dp := make([]int, n)
-	for i := 0; i < n; i++ {
-		node := queue[i]
-		for j := range node.next {
-			dp[j-1] = Max(dp[j-1], dp[node.self-1]+1)
-		}
-	}
-
-	// 全ての中での最大値を取得する
-	ans := 0
-	for i := 0; i < n; i++ {
-		ans = Max(ans, dp[i])
-	}
+	// l, rのインデックスを添字もつDPを考える
+	// 1: first, 2: second
+	first, second := calculate(0, n-1, 1)
+	ans := first - second
 	return ans
 }
+
+// return first, second
+func calculate(l, r, player int) (int, int) {
+	if memo[l][r] {
+		return dp[l][r][1], dp[l][r][2]
+	}
+
+	memo[l][r] = true
+	if r-l == 1 {
+		lv, rv := sli[l], sli[r]
+		if player == 1 {
+			if lv > rv {
+				dp[l][r][1] = lv
+				dp[l][r][2] = rv
+				return lv, rv
+			} else {
+				dp[l][r][1] = rv
+				dp[l][r][2] = lv
+				return rv, lv
+			}
+		} else {
+			if lv > rv {
+				dp[l][r][1] = rv
+				dp[l][r][2] = lv
+				return rv, lv
+			} else {
+				dp[l][r][1] = lv
+				dp[l][r][2] = rv
+				return lv, rv
+			}
+
+		}
+	}
+
+	l_first, l_second := calculate(l+1, r, another(player))
+	r_first, r_second := calculate(l, r-1, another(player))
+	if player == 1 {
+		l_first += sli[l]
+		r_first += sli[r]
+		if l_first > r_first {
+			dp[l][r][1] = l_first
+			dp[l][r][2] = l_second
+			return l_first, l_second
+		} else {
+			dp[l][r][1] = r_first
+			dp[l][r][2] = r_second
+			return r_first, r_second
+		}
+	} else {
+		l_second += sli[l]
+		r_second += sli[r]
+		if l_second > r_second {
+			dp[l][r][1] = l_first
+			dp[l][r][2] = l_second
+			return l_first, l_second
+		} else {
+			dp[l][r][1] = r_first
+			dp[l][r][2] = r_second
+			return r_first, r_second
+		}
+	}
+}
+
+// func sort(x, y int) int, int {
+//     if x > y {
+//         return x
+//     } else {
+//         return y
+//     }
+// }
+
+func another(player int) int {
+	if player == 1 {
+		return 2
+	} else {
+		return 1
+	}
+}
+
+// 4
+// 10 80 90 30
+// cal(0, 3)
+//     1: 10 + cal(1,3) or 30 + cal(0,2)
+//     2(1,3): 80 + cal(2,3) or 30 + cal(1,2)
+//     2(0,2): 10 + cal(1,2) or 90 + cal(0, 1)
+//     1:
 
 // ========================read
 // func read() string {
@@ -110,6 +166,12 @@ func readSli(n int) []int {
 func readInt() int {
 	sc.Scan()
 	ret, _ := strconv.Atoi(sc.Text())
+	return ret
+}
+
+func readFloat() float64 {
+	sc.Scan()
+	ret, _ := strconv.ParseFloat(sc.Text(), 64)
 	return ret
 }
 
@@ -200,16 +262,19 @@ func pr(arg ...interface{}) {
 		if dp, ok := v.([][]int); ok {
 			for _, v := range dp {
 				fmt.Print(v)
+				fmt.Print(", ")
 			}
 			continue
 		}
 		if dp, ok := v.([][]float64); ok {
 			for _, v := range dp {
 				fmt.Print(v)
+				fmt.Print(", ")
 			}
 			continue
 		}
 		fmt.Print(v)
+		fmt.Print(", ")
 	}
 	fmt.Println()
 }
