@@ -30,20 +30,30 @@ func run() interface{} {
 	n := readInt()
 	// s := read()
 
-	sli := make([][]int, n)
+	memo := make(map[int]bool)
 	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
-	}
+		x := readInt()
+		if _, ok := memo[i]; ok {
 
-	ans := sli
+		} else {
+			memo[x-1] = true
+		}
+	}
+	var ans []int
+	for i := 0; i < n; i++ {
+		if !memo[i] {
+			ans = append(ans, i+1)
+		}
+	}
+	fmt.Println(len(ans))
 	return ans
 }
 
 // ========================read
-func read() string {
-	sc.Scan()
-	return sc.Text()
-}
+// func read() string {
+// 	sc.Scan()
+//     return sc.Text()
+// }
 
 // func readSli(n int) []string {
 func readSli(n int) []int {
@@ -88,13 +98,17 @@ func print(ans interface{}) {
 	}
 	if sli, ok := ans.([]int); ok {
 		for _, v := range sli {
-			fmt.Println(v)
+			fmt.Print(v)
+			fmt.Print(" ")
+
 		}
+		fmt.Println()
 		return
 	}
 	if sli, ok := ans.([]int64); ok {
 		for _, v := range sli {
-			fmt.Println(v)
+			fmt.Print(v)
+			fmt.Print("")
 		}
 		return
 	}
@@ -146,19 +160,6 @@ func p(arg ...interface{}) {
 			}
 			continue
 		}
-		// pointer
-		// if dp, ok := v.([]*Rope); ok {
-		// 	fmt.Print("[ ")
-		// 	for i, v := range dp {
-		// 		if i == 0 {
-		// 			continue
-		// 		}
-		// 		fmt.Print(*v)
-		// 		fmt.Print(" ")
-		// 	}
-		// 	fmt.Println("]")
-		// 	continue
-		// }
 		fmt.Println(v)
 	}
 }

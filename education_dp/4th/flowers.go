@@ -30,14 +30,50 @@ func run() interface{} {
 	n := readInt()
 	// s := read()
 
-	sli := make([][]int, n)
-	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
-	}
+	h_sli := readSli(n)
+	a_sli := readSli(n)
+	dp := make([]int, n)
+	// for i := 0; i < n; i++ {
+	// 	dp[i] = make([]int, n)
+	// }
 
-	ans := sli
+	for i := 0; i < n; i++ {
+		a, h := a_sli[i], h_sli[i]
+
+		dp[a] = Max(Max(dp[a-1], dp[a-1]+h), dp[a])
+	}
+	ans := dp[n-1]
 	return ans
 }
+
+// 4
+// 3 1 4 2
+// 10 20 30 40
+
+// i=1 3 10
+// i=2
+//   3 10
+//   1 20
+// i=3
+//   3 10
+//   1 20
+//   4 50
+
+// 9
+// 4 2 5 8 3 6 1 7 9
+// 6 8 8 4 6 3 5 7 5
+
+// i=1 4 60
+// i=2
+//   4 60
+//   2 80
+// i=3
+//   5 140
+//   5 160
+// i=4
+//   8 200
+// i=5
+//
 
 // ========================read
 func read() string {

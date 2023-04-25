@@ -26,18 +26,71 @@ var sc = bufio.NewScanner(os.Stdin)
 // var sli []int
 // var memo [][]int
 
+type Rope struct {
+	l_edge int
+	r_edge int
+}
+
 func run() interface{} {
-	n := readInt()
+	n, m := readInt(), readInt()
 	// s := read()
 
-	sli := make([][]int, n)
-	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+	ropes := make([]*Rope, n+1)
+	for i := 1; i <= n; i++ {
+		r := Rope{l_edge: i, r_edge: i}
+		ropes[i] = &r
 	}
 
-	ans := sli
-	return ans
+	line, ring := n, 0
+	for i := 0; i < m; i++ {
+		a, _, c, _ := readInt(), read(), readInt(), read()
+		line--
+		rope_a := ropes[a]
+		rope_c := ropes[c]
+
+		if rope_a == rope_c {
+			// p(ropes)
+			ring++
+			continue
+		}
+
+		rope_a.add(a, rope_c, c)
+		// rope_a.l_edge = 1
+		l_edge := rope_c.l_edge
+		r_edge := rope_c.r_edge
+		ropes[l_edge] = ropes[a]
+		ropes[r_edge] = ropes[a]
+	}
+
+	return []int{ring, line}
 }
+
+func (base *Rope) add(from int, add *Rope, to int) {
+	var edge int
+
+	if add.l_edge == to {
+		edge = add.r_edge
+	} else {
+		edge = add.l_edge
+	}
+
+	if base.l_edge == from {
+		base.l_edge = edge
+	} else {
+		base.r_edge = edge
+	}
+}
+
+// 5 3
+// 3 R 5 B
+// 5 R 3 B
+// 4 R 2 B
+
+//  1 R B
+//  2 R B
+//  3 5 B
+//  4 R B
+//  5 R 3
 
 // ========================read
 func read() string {
@@ -146,19 +199,19 @@ func p(arg ...interface{}) {
 			}
 			continue
 		}
-		// pointer
-		// if dp, ok := v.([]*Rope); ok {
-		// 	fmt.Print("[ ")
-		// 	for i, v := range dp {
-		// 		if i == 0 {
-		// 			continue
-		// 		}
-		// 		fmt.Print(*v)
-		// 		fmt.Print(" ")
-		// 	}
-		// 	fmt.Println("]")
-		// 	continue
-		// }
+		if dp, ok := v.([]*Rope); ok {
+			fmt.Print("[ ")
+			for i, v := range dp {
+				if i == 0 {
+					continue
+				}
+				fmt.Print(*v)
+				fmt.Print(" ")
+			}
+			fmt.Println("]")
+			fmt.Println(v)
+			continue
+		}
 		fmt.Println(v)
 	}
 }

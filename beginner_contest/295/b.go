@@ -6,6 +6,7 @@ import (
 	"os"
 	"runtime"
 	"strconv"
+	"strings"
 	// "strings"
 	// "math"
 	// "reflect"
@@ -23,20 +24,68 @@ const (
 var sc = bufio.NewScanner(os.Stdin)
 
 // var dp [][]int
-// var sli []int
+var sli [][]string
+
 // var memo [][]int
 
 func run() interface{} {
-	n := readInt()
+	r, c := readInt(), readInt()
 	// s := read()
 
-	sli := make([][]int, n)
-	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+	sli = make([][]string, r)
+	for i := 0; i < r; i++ {
+		s := read()
+		sli[i] = strings.Split(s, "")
+	}
+	for i := 0; i < r; i++ {
+		for j := 0; j < c; j++ {
+			if sli[i][j] == "." || sli[i][j] == "#" {
+				continue
+			}
+
+			n, _ := strconv.Atoi(sli[i][j])
+			bomRange := getManhattanRange(n, j, i, r, c)
+			for _, c := range bomRange {
+				if sli[c[1]][c[0]] != "." && sli[c[1]][c[0]] != "#" {
+					continue
+				}
+				sli[c[1]][c[0]] = "."
+			}
+			sli[i][j] = "."
+		}
 	}
 
-	ans := sli
+	ans := make([]string, r)
+	for i := 0; i < r; i++ {
+		ans[i] = strings.Join(sli[i], "")
+	}
 	return ans
+}
+
+func getManhattanRange(n, x, y, r, c int) [][]int {
+	var ret [][]int
+	for i := 0; i < r; i++ {
+		for j := 0; j < c; j++ {
+			if Abs(i-y)+Abs(j-x) <= n {
+				ret = append(ret, []int{j, i})
+			}
+		}
+	}
+	return ret
+}
+
+func getOver0(n int) int {
+	if n < 0 {
+		return 0
+	}
+	return n
+}
+
+func getUnderC(n, c int) int {
+	if n > c {
+		return c
+	}
+	return n
 }
 
 // ========================read
@@ -140,25 +189,18 @@ func p(arg ...interface{}) {
 			}
 			continue
 		}
+		if dp, ok := v.([][]string); ok {
+			for _, v := range dp {
+				fmt.Println(v)
+			}
+			continue
+		}
 		if dp, ok := v.([][]float64); ok {
 			for _, v := range dp {
 				fmt.Println(v)
 			}
 			continue
 		}
-		// pointer
-		// if dp, ok := v.([]*Rope); ok {
-		// 	fmt.Print("[ ")
-		// 	for i, v := range dp {
-		// 		if i == 0 {
-		// 			continue
-		// 		}
-		// 		fmt.Print(*v)
-		// 		fmt.Print(" ")
-		// 	}
-		// 	fmt.Println("]")
-		// 	continue
-		// }
 		fmt.Println(v)
 	}
 }

@@ -27,23 +27,66 @@ var sc = bufio.NewScanner(os.Stdin)
 // var memo [][]int
 
 func run() interface{} {
-	n := readInt()
+	l, n1, n2 := readInt(), readInt(), readInt()
 	// s := read()
 
-	sli := make([][]int, n)
-	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+	sli1 := make([][]int, n1)
+	for i := 0; i < n1; i++ {
+		sli1[i] = readSli(2)
+	}
+	sli2 := make([][]int, n2)
+	for i := 0; i < n2; i++ {
+		sli2[i] = readSli(2)
 	}
 
-	ans := sli
+	ans := 0
+	// upper_idx, under_idx := 0, 0
+	upper_sli_idx, under_sli_idx := 0, 0
+	upper_remain, under_remain := 0, 0
+	var upper_num, under_num int
+	for i := 0; i < l; {
+		if upper_remain == 0 {
+			vl := sli1[upper_sli_idx]
+			upper_num = vl[0]
+			upper_remain = vl[1]
+			upper_sli_idx++
+		}
+		if under_remain == 0 {
+			vl := sli2[under_sli_idx]
+			under_num = vl[0]
+			under_remain = vl[1]
+			under_sli_idx++
+		}
+		next_stop := Min(upper_remain, under_remain)
+
+		if upper_num == under_num {
+			// same
+			ans += next_stop
+		} else {
+			// different
+			// nothing to do
+		}
+		i += next_stop
+		upper_remain -= next_stop
+		under_remain -= next_stop
+	}
+
 	return ans
 }
 
+// read first 1 2, 1 4
+// 1 1
+// 1 1 1 1
+// add 2 to ans
+// read 3 2
+// 1 1 3 3
+// 1 1 1 1
+
 // ========================read
-func read() string {
-	sc.Scan()
-	return sc.Text()
-}
+// func read() string {
+// 	sc.Scan()
+//     return sc.Text()
+// }
 
 // func readSli(n int) []string {
 func readSli(n int) []int {
@@ -146,19 +189,6 @@ func p(arg ...interface{}) {
 			}
 			continue
 		}
-		// pointer
-		// if dp, ok := v.([]*Rope); ok {
-		// 	fmt.Print("[ ")
-		// 	for i, v := range dp {
-		// 		if i == 0 {
-		// 			continue
-		// 		}
-		// 		fmt.Print(*v)
-		// 		fmt.Print(" ")
-		// 	}
-		// 	fmt.Println("]")
-		// 	continue
-		// }
 		fmt.Println(v)
 	}
 }

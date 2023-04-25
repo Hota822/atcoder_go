@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"bufio"
+	"fmt"
 	"os"
-	"strconv"
 	"runtime"
+	"strconv"
 	// "strings"
 	// "math"
 	// "reflect"
@@ -13,27 +13,31 @@ import (
 )
 
 const (
-    max_bufSize = 1_000_000_000 // default: 65536
+	max_bufSize = 1_000_000_000 // default: 65536
 	initial_buf = 10000
 	// max_int32 = 2147483647
+	// max_int64 = 9223372036854775807
 	// prime_number = 1000_000_007
 )
 
 var sc = bufio.NewScanner(os.Stdin)
+
+// var dp [][]int
+// var sli []int
+// var memo [][]int
 
 func run() interface{} {
 	n := readInt()
 	// s := read()
 
 	sli := make([][]int, n)
-	for i:=0; i < n; i++ {
+	for i := 0; i < n; i++ {
 		sli[i] = readSli(2)
 	}
 
 	ans := sli
 	return ans
 }
-
 
 // ========================read
 // func read() string {
@@ -45,21 +49,26 @@ func run() interface{} {
 func readSli(n int) []int {
 	// sli := make([]string, n)
 	sli := make([]int, n)
-	for i:=0; i < n; i++ {
+	for i := 0; i < n; i++ {
 		// sli[i] = read()
 		sli[i] = readInt()
 	}
-    return sli
+	return sli
 }
 
 func readInt() int {
-    sc.Scan()
-    ret, _ := strconv.Atoi(sc.Text())
-    return ret
+	sc.Scan()
+	ret, _ := strconv.Atoi(sc.Text())
+	return ret
 }
 
+func readFloat() float64 {
+	sc.Scan()
+	ret, _ := strconv.ParseFloat(sc.Text(), 64)
+	return ret
+}
 
-//=======================main========================
+// =======================main========================
 func main() {
 	buf := make([]byte, initial_buf)
 	sc.Buffer(buf, max_bufSize)
@@ -117,7 +126,7 @@ func Abs(x int) int {
 	if x > 0 {
 		return x
 	}
-	return - x
+	return -x
 }
 
 func p(arg ...interface{}) {
@@ -125,6 +134,69 @@ func p(arg ...interface{}) {
 	s := strconv.Itoa(l)
 	fmt.Println("dumped at line: " + s + ", value: ")
 	for _, v := range arg {
+		if dp, ok := v.([][]int); ok {
+			for _, v := range dp {
+				fmt.Println(v)
+			}
+			continue
+		}
+		if dp, ok := v.([][]float64); ok {
+			for _, v := range dp {
+				fmt.Println(v)
+			}
+			continue
+		}
 		fmt.Println(v)
 	}
+}
+
+func pr(arg ...interface{}) {
+	for _, v := range arg {
+		if dp, ok := v.([][]int); ok {
+			for _, v := range dp {
+				fmt.Print(v)
+				fmt.Print(", ")
+			}
+			continue
+		}
+		if dp, ok := v.([][]float64); ok {
+			for _, v := range dp {
+				fmt.Print(v)
+				fmt.Print(", ")
+			}
+			continue
+		}
+		fmt.Print(v)
+		fmt.Print(", ")
+	}
+	fmt.Println()
+}
+
+func pl(arg ...interface{}) {
+	fmt.Println()
+
+	pr(arg...)
+}
+
+func ps(header []string, arg ...interface{}) {
+	_, _, l, _ := runtime.Caller(1)
+	s := strconv.Itoa(l)
+	fmt.Println("dumped at line: " + s + ", value: ")
+	for idx, v := range arg {
+		fmt.Print(header[idx])
+		fmt.Print(": ")
+		fmt.Print(v)
+		fmt.Print(", ")
+	}
+	fmt.Println()
+}
+
+func s(args ...interface{}) []string {
+	var s_sli []string
+	for _, v := range args {
+		if s, ok := v.(string); ok {
+			s_sli = append(s_sli, s)
+		}
+	}
+	return s_sli
 }

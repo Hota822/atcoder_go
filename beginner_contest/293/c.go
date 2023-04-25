@@ -27,23 +27,73 @@ var sc = bufio.NewScanner(os.Stdin)
 // var memo [][]int
 
 func run() interface{} {
-	n := readInt()
+	h, w := readInt(), readInt()
 	// s := read()
 
-	sli := make([][]int, n)
-	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+	sli := make([][]int, h)
+	for i := 0; i < h; i++ {
+		sli[i] = readSli(w)
 	}
 
-	ans := sli
+	paths := makePaths(h, w)
+	// p(paths)
+	ans := 0
+	for _, v := range paths {
+		through := make(map[int]struct{})
+		dup := false
+		for _, coordinate := range v {
+			a := sli[coordinate[0]-1][coordinate[1]-1]
+			if _, ok := through[a]; ok {
+				dup = true
+				break
+			} else {
+				through[a] = struct{}{}
+			}
+		}
+
+		if !dup {
+			ans++
+		}
+	}
+
 	return ans
+
+}
+
+func makePaths(x, y int) [][][2]int {
+	paths := make([][][2]int, 1)
+	paths[0] = make([][2]int, 1)
+	paths[0][0] = [2]int{1, 1}
+
+	for i := 1; i < x+y-1; i++ {
+		next_paths := make([][][2]int, 0)
+		for _, v := range paths {
+			last_coordinate := v[i-1]
+			if last_coordinate[0] < x {
+				var path_to_right [][2]int
+				path_to_right = append(path_to_right, v...)
+				path_to_right = append(path_to_right, [2]int{last_coordinate[0] + 1, last_coordinate[1]})
+				next_paths = append(next_paths, path_to_right)
+			}
+
+			if last_coordinate[1] < y {
+				var path_to_bottom [][2]int
+				path_to_bottom = append(path_to_bottom, v...)
+				path_to_bottom = append(path_to_bottom, [2]int{last_coordinate[0], last_coordinate[1] + 1})
+				next_paths = append(next_paths, path_to_bottom)
+			}
+		}
+		paths = next_paths
+		// p(next_paths)
+	}
+	return paths
 }
 
 // ========================read
-func read() string {
-	sc.Scan()
-	return sc.Text()
-}
+// func read() string {
+// 	sc.Scan()
+//     return sc.Text()
+// }
 
 // func readSli(n int) []string {
 func readSli(n int) []int {
@@ -140,25 +190,12 @@ func p(arg ...interface{}) {
 			}
 			continue
 		}
-		if dp, ok := v.([][]float64); ok {
+		if dp, ok := v.([][][2]int); ok {
 			for _, v := range dp {
 				fmt.Println(v)
 			}
 			continue
 		}
-		// pointer
-		// if dp, ok := v.([]*Rope); ok {
-		// 	fmt.Print("[ ")
-		// 	for i, v := range dp {
-		// 		if i == 0 {
-		// 			continue
-		// 		}
-		// 		fmt.Print(*v)
-		// 		fmt.Print(" ")
-		// 	}
-		// 	fmt.Println("]")
-		// 	continue
-		// }
 		fmt.Println(v)
 	}
 }
@@ -172,7 +209,7 @@ func pr(arg ...interface{}) {
 			}
 			continue
 		}
-		if dp, ok := v.([][]float64); ok {
+		if dp, ok := v.([][2]int); ok {
 			for _, v := range dp {
 				fmt.Print(v)
 				fmt.Print(", ")

@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math/bits"
 	"os"
 	"runtime"
 	"strconv"
@@ -17,7 +18,7 @@ const (
 	initial_buf = 10000
 	// max_int32 = 2147483647
 	// max_int64 = 9223372036854775807
-	// prime_number = 1000_000_007
+	prime_number = 1000_000_007
 )
 
 var sc = bufio.NewScanner(os.Stdin)
@@ -28,22 +29,66 @@ var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
 	n := readInt()
-	// s := read()
 
 	sli := make([][]int, n)
 	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+		sli[i] = readSli(n)
 	}
 
-	ans := sli
+	// dp = [マッチした女性の集合をビットで表したもの]その時の場合の数
+	dp := make([]int, 1<<n)
+	dp[0] = 1
+
+	for s := 0; s < 1<<n; s++ {
+		if dp[s] == 0 {
+			continue
+		}
+
+		i := bits.OnesCount(uint(s))
+		for j := 0; j < n; j++ {
+			if s>>j&1 == 1 {
+				continue
+			}
+
+			if sli[i][j] == 0 {
+				continue
+			}
+
+			dp[s|1<<j] += dp[s]
+			dp[s|1<<j] %= prime_number
+		}
+	}
+
+	ans := dp[1<<n-1]
 	return ans
 }
 
+// 3
+// 0 1 1
+// 1 0 1
+// 1 1 1
+
+// s=0 => i=0,
+//  １行目が0 1 1なので、
+//    0 マッチしない
+//    1 => s[010], dp[010] +=1
+//    1 => s[001], dp[001] +=1
+// s=1 => i=1,
+//  ２行目が1 0 1なので
+//    1 => s[101], dp[101] += dp[001]
+//    0 => マッチしない
+//    1 => 既にマッチ済み
+// s=2 => i=1 = 010
+//  ２行目が1 0 1なので
+//    1 => s[110], dp[110] += dp[001]
+//    0 => マッチしない
+//    1 => s[011], dp[011] += dp[001]
+
 // ========================read
-func read() string {
-	sc.Scan()
-	return sc.Text()
-}
+// func read() string {
+// 	sc.Scan()
+//     return sc.Text()
+// }
 
 // func readSli(n int) []string {
 func readSli(n int) []int {
@@ -146,19 +191,6 @@ func p(arg ...interface{}) {
 			}
 			continue
 		}
-		// pointer
-		// if dp, ok := v.([]*Rope); ok {
-		// 	fmt.Print("[ ")
-		// 	for i, v := range dp {
-		// 		if i == 0 {
-		// 			continue
-		// 		}
-		// 		fmt.Print(*v)
-		// 		fmt.Print(" ")
-		// 	}
-		// 	fmt.Println("]")
-		// 	continue
-		// }
 		fmt.Println(v)
 	}
 }

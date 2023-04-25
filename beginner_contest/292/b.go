@@ -27,23 +27,37 @@ var sc = bufio.NewScanner(os.Stdin)
 // var memo [][]int
 
 func run() interface{} {
-	n := readInt()
+	n, q := readInt(), readInt()
 	// s := read()
 
-	sli := make([][]int, n)
-	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+	// sli := readSli(q)
+	ans := make([]bool, 0)
+	count := make([]int, n)
+	out := make(map[int]bool)
+	for i := 0; i < q; i++ {
+		e, x := readInt(), readInt()
+		if e == 1 {
+			count[x-1]++
+			if count[x-1] >= 2 {
+				out[x] = true
+			}
+
+		} else if e == 2 {
+			out[x] = true
+		} else {
+			ans = append(ans, out[x])
+		}
 	}
 
-	ans := sli
+	// ans := sli
 	return ans
 }
 
 // ========================read
-func read() string {
-	sc.Scan()
-	return sc.Text()
-}
+// func read() string {
+// 	sc.Scan()
+//     return sc.Text()
+// }
 
 // func readSli(n int) []string {
 func readSli(n int) []int {
@@ -78,11 +92,13 @@ func main() {
 }
 
 func print(ans interface{}) {
-	if v, ok := ans.(bool); ok {
-		if v {
-			fmt.Println("Yes")
-		} else {
-			fmt.Println("No")
+	if v, ok := ans.([]bool); ok {
+		for _, b := range v {
+			if b {
+				fmt.Println("Yes")
+			} else {
+				fmt.Println("No")
+			}
 		}
 		return
 	}

@@ -17,26 +17,105 @@ const (
 	initial_buf = 10000
 	// max_int32 = 2147483647
 	// max_int64 = 9223372036854775807
-	// prime_number = 1000_000_007
+	prime_number = 1000_000_007
+	white        = 0
+	black        = 1
 )
 
 var sc = bufio.NewScanner(os.Stdin)
 
-// var dp [][]int
 // var sli []int
 // var memo [][]int
+var dp [][2]int
+var tree map[int]*Node
+
+type Node struct {
+	links              []int
+	self               int
+	children           []int
+	alreadyGetChildren bool
+}
+
+// 879053727
+// 879053727
+// 323768596
 
 func run() interface{} {
 	n := readInt()
 	// s := read()
-
-	sli := make([][]int, n)
-	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+	if n == 1 {
+		return 2
 	}
 
-	ans := sli
-	return ans
+	tree = make(map[int]*Node)
+	dp = make([][2]int, n+1)
+	dp[n-1] = [2]int{}
+	dp[n] = [2]int{}
+	for i := 0; i < n-1; i++ {
+		dp[i] = [2]int{}
+		x, y := readInt(), readInt()
+		createNode(x, y)
+		createNode(y, x)
+	}
+
+	root := 1
+	rootNode := tree[root]
+	b := calculate(black, root, rootNode.getChildren(0))
+	w := calculate(white, root, rootNode.getChildren(0))
+	ans := b + w
+	return ans % prime_number
+}
+
+func createNode(a, b int) {
+	if node, ok := tree[a]; ok {
+		node.links = append(node.links, b)
+	} else {
+		tree[a] = &(Node{links: []int{b}})
+	}
+}
+
+func (node *Node) getChildren(parentIdx int) []int {
+	if node.alreadyGetChildren {
+		return node.children
+	}
+
+	node.alreadyGetChildren = true
+	ret := make([]int, 0)
+	for _, idx := range node.links {
+		if idx != parentIdx {
+			ret = append(ret, idx)
+		}
+	}
+	node.children = ret
+	return ret
+}
+
+func calculate(parentColor, parentIdx int, children []int) int {
+	if len(children) == 0 {
+		return 1
+	}
+
+	if dp[parentIdx][parentColor] > 0 {
+		return dp[parentIdx][parentColor]
+	}
+
+	ret := 1
+	for _, idx := range children {
+		child := tree[idx]
+		w := calculate(white, idx, child.getChildren(parentIdx)) % prime_number
+		dp[idx][white] = w
+		if parentColor == black {
+			ret *= w
+			ret %= prime_number
+			continue
+		}
+
+		b := calculate(black, idx, child.getChildren(parentIdx)) % prime_number
+		dp[idx][black] = b
+		ret *= (w + b)
+		ret %= prime_number
+	}
+	return ret
 }
 
 // ========================read
@@ -147,18 +226,20 @@ func p(arg ...interface{}) {
 			continue
 		}
 		// pointer
-		// if dp, ok := v.([]*Rope); ok {
-		// 	fmt.Print("[ ")
-		// 	for i, v := range dp {
-		// 		if i == 0 {
-		// 			continue
-		// 		}
-		// 		fmt.Print(*v)
-		// 		fmt.Print(" ")
-		// 	}
-		// 	fmt.Println("]")
-		// 	continue
-		// }
+		if dp, ok := v.(map[int]*Node); ok {
+			fmt.Print("[ ")
+			for i, v := range dp {
+				if i == 0 {
+					continue
+				}
+				fmt.Print(i)
+				fmt.Print(":")
+				fmt.Print(v.links)
+				fmt.Print(", ")
+			}
+			fmt.Println("]")
+			continue
+		}
 		fmt.Println(v)
 	}
 }

@@ -16,34 +16,83 @@ const (
 	max_bufSize = 1_000_000_000 // default: 65536
 	initial_buf = 10000
 	// max_int32 = 2147483647
-	// max_int64 = 9223372036854775807
+	max_int64 = 9223372036854775807
 	// prime_number = 1000_000_007
 )
 
 var sc = bufio.NewScanner(os.Stdin)
 
-// var dp [][]int
-// var sli []int
-// var memo [][]int
+var dp [][]int
+var sli []int
+var memo [][]bool
+var cum []int
 
 func run() interface{} {
 	n := readInt()
-	// s := read()
 
-	sli := make([][]int, n)
+	sli = readSli(n)
+	dp = make([][]int, n)
+	memo = make([][]bool, n)
 	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+		dp[i] = make([]int, n)
+		memo[i] = make([]bool, n)
 	}
 
-	ans := sli
+	cum = make([]int, n+1)
+	for i := 1; i <= n; i++ {
+		cum[i] = cum[i-1] + sli[i-1]
+	}
+
+	ans := calculate(0, n-1)
 	return ans
 }
 
-// ========================read
-func read() string {
-	sc.Scan()
-	return sc.Text()
+func calculate(l, r int) int {
+	// p(dp);
+	if memo[l][r] {
+		return dp[l][r]
+	}
+	memo[l][r] = true
+
+	if l == r {
+		return 0
+	}
+
+	min := max_int64
+	for i := l; i < r; i++ {
+		// 	pl("l, i: ", l, i, "   i+1, r: ", i+1, r, "cum: ", cum[r+1]-cum[i])
+		min = Min(min, calculate(l, i)+calculate(i+1, r))
+	}
+
+	dp[l][r] = min + cum[r+1] - cum[l]
+
+	return dp[l][r]
 }
+
+// 4
+// 10 20 30 40
+
+// 10 + [20 30 40]
+//   > 20 + [30 40]
+//     > 30 + 40
+//   > [20 30] + 40
+//     > 30 + 40
+// [10 20] + [30 40]
+//   > 10 + 20
+// [10 20 30] + 40
+//   > 10 + [20 30]
+//   > [10 20] + 30
+
+// [10 0 0 0]
+// [0 20 0 0]
+// [0 0 30 70]
+// [0 0 0 40]
+
+// ========================read
+// func read() string {
+// 	sc.Scan()
+//     return sc.Text()
+// }
 
 // func readSli(n int) []string {
 func readSli(n int) []int {
@@ -146,19 +195,6 @@ func p(arg ...interface{}) {
 			}
 			continue
 		}
-		// pointer
-		// if dp, ok := v.([]*Rope); ok {
-		// 	fmt.Print("[ ")
-		// 	for i, v := range dp {
-		// 		if i == 0 {
-		// 			continue
-		// 		}
-		// 		fmt.Print(*v)
-		// 		fmt.Print(" ")
-		// 	}
-		// 	fmt.Println("]")
-		// 	continue
-		// }
 		fmt.Println(v)
 	}
 }

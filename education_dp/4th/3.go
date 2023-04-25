@@ -6,6 +6,7 @@ import (
 	"os"
 	"runtime"
 	"strconv"
+	"strings"
 	// "strings"
 	// "math"
 	// "reflect"
@@ -27,16 +28,34 @@ var sc = bufio.NewScanner(os.Stdin)
 // var memo [][]int
 
 func run() interface{} {
-	n := readInt()
-	// s := read()
+	// s := readInt()
+	s := read()
 
-	sli := make([][]int, n)
-	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+	edge := 0
+	ret := make([]string, 1)
+	ret[0] = string(s[0])
+	for i := 1; i < len(s); i++ {
+		// same character
+		if len(ret) == 0 {
+			ret = append(ret, string(s[i]))
+		} else if ret[edge] == string(s[i]) {
+			if len(ret) == 1 {
+				ret = make([]string, 0)
+				edge = 0
+			} else {
+				ret = ret[0:edge]
+				edge--
+			}
+		} else {
+			ret = append(ret, string(s[i]))
+			edge++
+		}
 	}
-
-	ans := sli
-	return ans
+	if len(ret) == 0 {
+		return ""
+	} else {
+		return strings.Join(ret, "")
+	}
 }
 
 // ========================read
@@ -146,19 +165,6 @@ func p(arg ...interface{}) {
 			}
 			continue
 		}
-		// pointer
-		// if dp, ok := v.([]*Rope); ok {
-		// 	fmt.Print("[ ")
-		// 	for i, v := range dp {
-		// 		if i == 0 {
-		// 			continue
-		// 		}
-		// 		fmt.Print(*v)
-		// 		fmt.Print(" ")
-		// 	}
-		// 	fmt.Println("]")
-		// 	continue
-		// }
 		fmt.Println(v)
 	}
 }

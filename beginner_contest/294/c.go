@@ -15,7 +15,7 @@ import (
 const (
 	max_bufSize = 1_000_000_000 // default: 65536
 	initial_buf = 10000
-	// max_int32 = 2147483647
+	max_int32   = 2147483647
 	// max_int64 = 9223372036854775807
 	// prime_number = 1000_000_007
 )
@@ -26,24 +26,37 @@ var sc = bufio.NewScanner(os.Stdin)
 // var sli []int
 // var memo [][]int
 
-func run() interface{} {
-	n := readInt()
-	// s := read()
+func run() (interface{}, interface{}) {
+	n, m := readInt(), readInt()
 
-	sli := make([][]int, n)
-	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+	a := readSli(n)
+	a = append(a, max_int32)
+	b := readSli(m)
+	b = append(b, max_int32)
+
+	ai, bi := 0, 0
+	order := 1
+	var ans1, ans2 []int
+	for i := 0; i < n+m; i++ {
+		if a[ai] < b[bi] {
+			ai++
+			ans1 = append(ans1, order)
+		} else {
+			bi++
+			ans2 = append(ans2, order)
+		}
+
+		order++
 	}
 
-	ans := sli
-	return ans
+	return ans1, ans2
 }
 
 // ========================read
-func read() string {
-	sc.Scan()
-	return sc.Text()
-}
+// func read() string {
+// 	sc.Scan()
+//     return sc.Text()
+// }
 
 // func readSli(n int) []string {
 func readSli(n int) []int {
@@ -73,8 +86,9 @@ func main() {
 	buf := make([]byte, initial_buf)
 	sc.Buffer(buf, max_bufSize)
 	sc.Split(bufio.ScanWords)
-	result := run()
-	print(result)
+	r1, r2 := run()
+	print(r1)
+	print(r2)
 }
 
 func print(ans interface{}) {
@@ -88,8 +102,10 @@ func print(ans interface{}) {
 	}
 	if sli, ok := ans.([]int); ok {
 		for _, v := range sli {
-			fmt.Println(v)
+			fmt.Print(v)
+			fmt.Print(" ")
 		}
+		fmt.Println()
 		return
 	}
 	if sli, ok := ans.([]int64); ok {
@@ -146,19 +162,6 @@ func p(arg ...interface{}) {
 			}
 			continue
 		}
-		// pointer
-		// if dp, ok := v.([]*Rope); ok {
-		// 	fmt.Print("[ ")
-		// 	for i, v := range dp {
-		// 		if i == 0 {
-		// 			continue
-		// 		}
-		// 		fmt.Print(*v)
-		// 		fmt.Print(" ")
-		// 	}
-		// 	fmt.Println("]")
-		// 	continue
-		// }
 		fmt.Println(v)
 	}
 }

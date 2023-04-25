@@ -6,6 +6,7 @@ import (
 	"os"
 	"runtime"
 	"strconv"
+	"strings"
 	// "strings"
 	// "math"
 	// "reflect"
@@ -25,18 +26,31 @@ var sc = bufio.NewScanner(os.Stdin)
 // var dp [][]int
 // var sli []int
 // var memo [][]int
+// str := []string {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"}
+var large_str = []string{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
+
+func GetAlphabetMap() map[string]int {
+	m := make(map[string]int)
+	alphabets := []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
+	for i := 0; i < 26; i++ {
+		m[alphabets[i]] = i
+	}
+	return m
+}
 
 func run() interface{} {
-	n := readInt()
-	// s := read()
+	// n := readInt()
+	s := read()
+	m := GetAlphabetMap()
 
-	sli := make([][]int, n)
-	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+	ans := make([]string, 0)
+	for _, v := range s {
+		i := m[string(v)]
+		ans = append(ans, large_str[i])
 	}
 
-	ans := sli
-	return ans
+	// ans := sli
+	return strings.Join(ans, "")
 }
 
 // ========================read

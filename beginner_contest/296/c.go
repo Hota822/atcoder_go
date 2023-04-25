@@ -15,7 +15,7 @@ import (
 const (
 	max_bufSize = 1_000_000_000 // default: 65536
 	initial_buf = 10000
-	// max_int32 = 2147483647
+	max_int32   = 2147483647
 	// max_int64 = 9223372036854775807
 	// prime_number = 1000_000_007
 )
@@ -26,24 +26,46 @@ var sc = bufio.NewScanner(os.Stdin)
 // var sli []int
 // var memo [][]int
 
-func run() interface{} {
-	n := readInt()
-	// s := read()
+// 6 5
+//  3  1  4  1 5 9
 
-	sli := make([][]int, n)
-	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+// -2 -4 -1 -4 0 4
+
+// 6 5
+//  2 7 1 8 2 8
+// -3 2
+
+func run() interface{} {
+	n, x := readInt(), readInt()
+	if x == 0 {
+		return true
 	}
 
-	ans := sli
-	return ans
+	sli := make(map[int]bool)
+	for i := 0; i < n; i++ {
+		a := readInt()
+		sli[a] = true
+	}
+
+	for i := range sli {
+		pair := Pair(i, x)
+		if sli[pair] {
+			return true
+		}
+	}
+
+	return false
+}
+
+func Pair(n, x int) int {
+	return n - x
 }
 
 // ========================read
-func read() string {
-	sc.Scan()
-	return sc.Text()
-}
+// func read() string {
+// 	sc.Scan()
+//     return sc.Text()
+// }
 
 // func readSli(n int) []string {
 func readSli(n int) []int {
@@ -146,19 +168,6 @@ func p(arg ...interface{}) {
 			}
 			continue
 		}
-		// pointer
-		// if dp, ok := v.([]*Rope); ok {
-		// 	fmt.Print("[ ")
-		// 	for i, v := range dp {
-		// 		if i == 0 {
-		// 			continue
-		// 		}
-		// 		fmt.Print(*v)
-		// 		fmt.Print(" ")
-		// 	}
-		// 	fmt.Println("]")
-		// 	continue
-		// }
 		fmt.Println(v)
 	}
 }

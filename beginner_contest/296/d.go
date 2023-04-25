@@ -27,23 +27,37 @@ var sc = bufio.NewScanner(os.Stdin)
 // var memo [][]int
 
 func run() interface{} {
-	n := readInt()
-	// s := read()
-
-	sli := make([][]int, n)
-	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+	n, m := readInt(), readInt()
+	// n が m より大きいとき、 m*1 が最少になる
+	if n >= m {
+		return m
 	}
 
-	ans := sli
-	return ans
+	// N^2 が m に届かないとき、x < mとなり、 x > mを満たせない
+	if n*n < m {
+		return -1
+	}
+
+	// for x := 1; x <= n*n-m; x++ {
+
+	// }
+	for a := 1; a <= n; a++ {
+		for b := 1; b <= n; b++ {
+
+		}
+	}
+	// a * b = X < N^2
+	// X > M
+	// N > M
+
+	return -1
 }
 
 // ========================read
-func read() string {
-	sc.Scan()
-	return sc.Text()
-}
+// func read() string {
+// 	sc.Scan()
+//     return sc.Text()
+// }
 
 // func readSli(n int) []string {
 func readSli(n int) []int {
@@ -146,19 +160,6 @@ func p(arg ...interface{}) {
 			}
 			continue
 		}
-		// pointer
-		// if dp, ok := v.([]*Rope); ok {
-		// 	fmt.Print("[ ")
-		// 	for i, v := range dp {
-		// 		if i == 0 {
-		// 			continue
-		// 		}
-		// 		fmt.Print(*v)
-		// 		fmt.Print(" ")
-		// 	}
-		// 	fmt.Println("]")
-		// 	continue
-		// }
 		fmt.Println(v)
 	}
 }

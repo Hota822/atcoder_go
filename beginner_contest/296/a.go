@@ -28,15 +28,32 @@ var sc = bufio.NewScanner(os.Stdin)
 
 func run() interface{} {
 	n := readInt()
-	// s := read()
+	s := read()
 
-	sli := make([][]int, n)
+	next_str := "M"
 	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+
+		if i == 0 {
+			next_str = next(string(s[0]))
+			next_str = next(next_str)
+		}
+
+		if next_str != string(s[i]) {
+			return false
+		}
+		next_str = next(next_str)
 	}
 
-	ans := sli
-	return ans
+	// ans := sli
+	return true
+}
+
+func next(str string) string {
+	if str == "M" {
+		return "F"
+	} else {
+		return "M"
+	}
 }
 
 // ========================read
@@ -146,19 +163,6 @@ func p(arg ...interface{}) {
 			}
 			continue
 		}
-		// pointer
-		// if dp, ok := v.([]*Rope); ok {
-		// 	fmt.Print("[ ")
-		// 	for i, v := range dp {
-		// 		if i == 0 {
-		// 			continue
-		// 		}
-		// 		fmt.Print(*v)
-		// 		fmt.Print(" ")
-		// 	}
-		// 	fmt.Println("]")
-		// 	continue
-		// }
 		fmt.Println(v)
 	}
 }

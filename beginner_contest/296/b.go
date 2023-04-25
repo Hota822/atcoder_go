@@ -27,16 +27,21 @@ var sc = bufio.NewScanner(os.Stdin)
 // var memo [][]int
 
 func run() interface{} {
-	n := readInt()
-	// s := read()
 
-	sli := make([][]int, n)
+	col_sli := []string{"a", "b", "c", "d", "e", "f", "g", "h"}
+	row_sli := []int{8, 7, 6, 5, 4, 3, 2, 1}
+	n := 8
+	// sli := make([][]int, n)
 	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+		s := read()
+		for j := 0; j < n; j++ {
+			if string(s[j]) == "*" {
+				return col_sli[j] + fmt.Sprint(row_sli[i])
+			}
+		}
 	}
 
-	ans := sli
-	return ans
+	return ""
 }
 
 // ========================read
@@ -146,19 +151,6 @@ func p(arg ...interface{}) {
 			}
 			continue
 		}
-		// pointer
-		// if dp, ok := v.([]*Rope); ok {
-		// 	fmt.Print("[ ")
-		// 	for i, v := range dp {
-		// 		if i == 0 {
-		// 			continue
-		// 		}
-		// 		fmt.Print(*v)
-		// 		fmt.Print(" ")
-		// 	}
-		// 	fmt.Println("]")
-		// 	continue
-		// }
 		fmt.Println(v)
 	}
 }

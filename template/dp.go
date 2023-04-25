@@ -1,3 +1,5 @@
+package dp
+
 func initSliceAs(len, val int) []int {
 	sli := make([]int, len)
 	sli[0] = val
@@ -7,19 +9,24 @@ func initSliceAs(len, val int) []int {
 	return sli
 }
 
+// normal tree =================================================
 var tree map[int]*Node
+
 type Node struct {
 	links []int
+	self  int
 }
 
 // get children
-// for _, v:= range tree.links
-//   if v == parent || v == current {
-//     continue
-//   }
-//
-//   any processes
-// }
+func (node *Node) getChildren(parent int) []int {
+	ret := make([]int, 0)
+	for _, v := range node.links {
+		if v != parent {
+			ret = append(ret, v)
+		}
+	}
+
+	return ret
 }
 
 func makeTree(n int) {
@@ -45,6 +52,7 @@ type SegmentTree struct {
 	data        []int
 	element_num int
 }
+
 func (tree SegmentTree) getMax(x, y int) int {
 	var get func(x, y, l, r, k int) int
 	get = func(x, y, l, r, k int) int {
@@ -71,14 +79,14 @@ func newSegmentTree(n int) SegmentTree {
 	return st
 }
 
-func (tree SegmentTree) getMax(idx int) int {
-	max := 0
-	for i := idx; i > 0; {
-		max = Max(max, tree.data[i])
-		i -= i & -i
-	}
-	return max
-}
+// func (tree SegmentTree) getMax(idx int) int {
+// 	max := 0
+// 	for i := idx; i > 0; {
+// 		max = Max(max, tree.data[i])
+// 		i -= i & -i
+// 	}
+// 	return max
+// }
 
 func (tree SegmentTree) update(idx, val int) {
 	for i := idx; i <= tree.element_num; {
@@ -86,3 +94,7 @@ func (tree SegmentTree) update(idx, val int) {
 		i += i & -i
 	}
 }
+
+// dependent to another packages
+func Max(x, y int) int
+func readInt() int

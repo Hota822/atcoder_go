@@ -15,9 +15,9 @@ import (
 const (
 	max_bufSize = 1_000_000_000 // default: 65536
 	initial_buf = 10000
-	// max_int32 = 2147483647
+	max_int32   = 2147483647
 	// max_int64 = 9223372036854775807
-	// prime_number = 1000_000_007
+	prime_number = 1000_000_007
 )
 
 var sc = bufio.NewScanner(os.Stdin)
@@ -30,50 +30,74 @@ func run() interface{} {
 	n, k := readInt(), readInt()
 	// s := read()
 
-	sli := make([][]int, n)
-	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+	sli := readSli(n)
+	dp := make([][]int, n+1)
+	dp[0] = make([]int, k+1)
+	dp[0][0] = 1
+	// dp := initSliceAs(k, 1)
+
+	for i := 1; i <= n; i++ {
+		dp[i] = make([]int, k+1)
+		cum := make([]int, k+2)
+
+		cum[0] = 0
+		for j := 1; j <= k+1; j++ {
+			cum[j] = (cum[j-1] + dp[i-1][j-1]) % prime_number
+		}
+
+		for j := 0; j <= k; j++ {
+			dp[i][j] = (cum[j+1] - cum[Max(0, j-sli[i-1])] + prime_number) % prime_number
+		}
 	}
 
-	ans := sli
+	ans := dp[n][k]
+
 	return ans
 }
 
-// 3 4
-// 1 2 3
-// (0,1,3)
-// (0,2,2)
-// (1,0,3)
-// (1,1,2)
-// (1,2,1)
+// i番目の子供までで、ｊ個の飴を分け合う
+// i=0, j=0, dp=1
+// i=0, j=1, dp=0, ...
 
-// i番目の子供からj番目のこどもまでで、k個の飴を分け合う
-// i=0, j=0, k=0 dp[0][0]=1
+// i=1, j=0, dp=1 (0)
+// i=1, j=1, dp=1 (1)
+// i=1, j=2, dp=0
+// i=1, j=3, dp=0
+// i=1, j=4, dp=0
 
-// i=1, j=2, k=1
+// i=2, j=0, dp=1
+// i=2, j=1, dp=2 (0,1)(1,0)
+//   > dp[i-1][j-1] +dp[i-1][j] = 2
+//   > dp[i-1][0] + dp[j-1][1]
+// i=2, j=2, dp=1 (1,1)(0,2)
+//   > dp[i-1][j-2] + dp[i-1][j-1] + dp[i-1][j]
+//   > dp[i-1][0] + dp[i-1][1] + dp[i-1][2] = 2
+// i=2, j=3, dp=1 (1,2)
+//   > dp[i-1][j-3] + dp[i-1][j-2] + dp[i-1][j-1] + dp[i-1][j] =1
+//   >     ×             1               0             0  = 1
+// i=2, j=4, dp=0
+//   > dp[i-1][j]
 
-// 2 * 3 * 4 = 24,
-// 24 - x = 7
-
-// 0 0 0
-// 0 0 1
-// 0 0 2
-// 0 0 3
-// 0 1 0
-// 0 1 1
-// 0 1 2
-// 0 1 3
-// 0 2 0
-// 0 2 1
-// 0 2 2
-// 0 2 3
-// 1 ...
+// i=3, j=0, dp=1
+// i=3, j=1, dp=3 (1,0,0)(0,1,0)(0,0,1)
+// i=3, j=2, dp=3 (1,1,0)(1,0,1)(0,1,1)
+// i=3, j=3, dp=6 (1,2,0)|(1,1,1)(0,2,1)|(1,0,2)(0,1,2)|(0,0,3)
+// i=3, j=4, dp=5 (0,1,3)(0,2,2)(1,0,3)(1,1,2)(1,2,1)
 
 // ========================read
 // func read() string {
 // 	sc.Scan()
 //     return sc.Text()
 // }
+
+func initSliceAs(len, val int) []int {
+	sli := make([]int, len)
+	sli[0] = val
+	for i := 1; i < len; i *= 2 {
+		copy(sli[i:], sli[:i])
+	}
+	return sli
+}
 
 // func readSli(n int) []string {
 func readSli(n int) []int {

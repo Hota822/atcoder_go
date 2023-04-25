@@ -30,20 +30,22 @@ func run() interface{} {
 	n := readInt()
 	// s := read()
 
-	sli := make([][]int, n)
+	sli := readSli(n)
+	var ans []int
 	for i := 0; i < n; i++ {
-		sli[i] = readSli(2)
+		if sli[i]%2 == 0 {
+			ans = append(ans, sli[i])
+		}
 	}
 
-	ans := sli
 	return ans
 }
 
 // ========================read
-func read() string {
-	sc.Scan()
-	return sc.Text()
-}
+// func read() string {
+// 	sc.Scan()
+//     return sc.Text()
+// }
 
 // func readSli(n int) []string {
 func readSli(n int) []int {
@@ -146,19 +148,6 @@ func p(arg ...interface{}) {
 			}
 			continue
 		}
-		// pointer
-		// if dp, ok := v.([]*Rope); ok {
-		// 	fmt.Print("[ ")
-		// 	for i, v := range dp {
-		// 		if i == 0 {
-		// 			continue
-		// 		}
-		// 		fmt.Print(*v)
-		// 		fmt.Print(" ")
-		// 	}
-		// 	fmt.Println("]")
-		// 	continue
-		// }
 		fmt.Println(v)
 	}
 }
