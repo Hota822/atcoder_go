@@ -22,89 +22,49 @@ const (
 
 var sc = bufio.NewScanner(os.Stdin)
 
-// var dp [][]int
-// var sli []int
-var memo map[int]int
-
 func run() interface{} {
-	n := readInt()
+	n, m := readInt(), readInt()
 	// s := read()
 
-	memo = make(map[int]int)
-
-	ans := 0
-	factorization(n - 1)
-	for i := 1; i < n; i++ {
-		ab := i
-		cd := n - i
-		ans += memo[ab] * memo[cd]
+	matcher := 0
+	for i := 0; i < n; i++ {
+		matcher = matcher | 1<<(i)
+	}
+	sli := make([]int, m)
+	memo1 := make([][]int, m)
+	for i := 0; i < m; i++ {
+		c := readInt()
+		val := 0
+		memo1[i] = make([]int, c)
+		for j := 0; j < c; j++ {
+			a := readInt()
+			memo1[i][j] = a
+			val = val | 1<<(a-1)
+		}
+		sli[i] = val
 	}
 
-	return ans
-}
-
-func factorization(n int) {
-	prime_numbers := []int{2, 3}
-	memo[1] = 1
-	memo[2] = 2
-	memo[3] = 2
-	for i := 4; i <= n; i++ {
-		if memo[i] > 0 {
-			continue
+	result := make([]int, 1)
+	for i := 0; i < m; i++ {
+		set := sli[i]
+		for _, bit := range result {
+			result = append(result, bit|set)
 		}
-
-		x := i
-		m := make(map[int]int)
-		is_prime := true
-		for j := 0; j < len(prime_numbers); j++ {
-			pri := prime_numbers[j]
-			for {
-				if x%pri == 0 {
-					x /= pri
-					m[pri]++
-					is_prime = false
-				} else {
-					break
-				}
-			}
-		}
-
-		if is_prime {
-			prime_numbers = append(prime_numbers, i)
-			memo[i] = 2
-			for j := 0; j < len(prime_numbers)-1; j++ {
-				pri := prime_numbers[j]
-				if i*pri > n {
-					break
-				}
-
-				memo[i*pri] = memo[i] * 2
-			}
-		} else {
-			ret := 1
-			for _, c := range m {
-				ret *= (c + 1)
-			}
-			memo[i] = ret
-		}
-
 	}
-}
 
-// 5
-// 1,5 5,1
-// 10 = 5 * 2 1+1 * 1+1 = 4
-// 1,10 2,5 5,2 10,1
-// 20 = 5 *2^2 = 1+1 * 2+1 = 6
-// 1,20 2,10 4,5 5,4 10,2 20,1
-// 40 = 5 *2^3 = 1+1 * 3+1 = 8
-// 1,40 2,20 4,10 5,8
+	ans := make(map[int]int)
+	for _, v := range result {
+		ans[v]++
+	}
+
+	return ans[matcher]
+}
 
 // ========================read
-// func read() string {
-// 	sc.Scan()
-//     return sc.Text()
-// }
+func read() string {
+	sc.Scan()
+	return sc.Text()
+}
 
 // func readSli(n int) []string {
 func readSli(n int) []int {

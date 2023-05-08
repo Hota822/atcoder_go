@@ -1,25 +1,40 @@
-package math
+package custom_math
 
-// math package
+import (
+	"math"
+	"sort"
+)
+
 func Abs(x float64) float64 {
-	// return absolute value
+	return math.Abs(x)
 }
 
 func DiffAbs(x, y int) int {
 	return int(math.Abs(float64(x - y)))
 }
 
-// math package
 func Pow(x, y int) float64 {
-	// return x^y
+	return math.Pow(float64(x), float64(y))
 }
 
 func RoundUp(x, y int) int {
-    return (x + y -1 )/y
+	return (x + y - 1) / y
 }
 
-import {
-	"sort"
+func SumXtoY(x, y int) int {
+	sum := x + y
+	if sum%2 == 0 {
+		return sum*2 + sum/2
+	}
+	return sum * 2
+}
+
+func Sum(sli []int) int {
+	sum := 0
+	for _, i := range sli {
+		sum += i
+	}
+	return sum
 }
 
 func MinSli(sli []int) int {
@@ -27,7 +42,7 @@ func MinSli(sli []int) int {
 	return sli[0]
 }
 
-func MaxWithIdx(x, y ,ix, iy, int) (int, int) {
+func MaxWithIdx(x, y, ix, iy int) (int, int) {
 	if x > y {
 		return x, ix
 	}
@@ -54,40 +69,54 @@ func MaxOf3(sli [3]int) int {
 	return z
 }
 
-// implemented---------------------------------------------
-// func Abs(x int) int {
-// 	if x > 0 {
-// 		return x
-// 	}
-// 	return - x
-// }
+// factorization
+var memo map[int]int
 
-// func SumXtoY(x, y int) int {
-// 	sum := x + y
-// 	if sum % 2 == 0 {
-// 		return sum * 2 + sum / 2
-// 	}
-// 	return sum * 2
-// }
+func factorization(n int) {
+	prime_numbers := []int{2, 3}
+	memo[1] = 1
+	memo[2] = 2
+	memo[3] = 2
+	for i := 4; i <= n; i++ {
+		x := i
+		m := make(map[int]int)
+		is_prime := true
+		for j := 0; j < len(prime_numbers); j++ {
+			pri := prime_numbers[j]
+			for {
+				if x%pri == 0 {
+					x /= pri
+					m[pri]++
+					is_prime = false
+				} else {
+					break
+				}
+			}
+		}
 
-// func Sum(sli [int]) int {
-// 	sum := 0
-// 	for _, i := range sli {
-// 		sum += i
-// 	}
-// 	return sum
-// }
+		if is_prime {
+			prime_numbers = append(prime_numbers, i)
+			memo[i] = 2
+		} else {
+			ret := 1
+			for _, c := range m {
+				ret *= (c + 1)
+			}
+			memo[i] = ret
+		}
+	}
+}
 
-// func Min(x, y int) int {
-// 	if x < y {
-// 		return x
-// 	}
-// 	return y
-// }
+func Min(x, y int) int {
+	if x < y {
+		return x
+	}
+	return y
+}
 
-// func Max(x, y int) int {
-// 	if x > y {
-// 		return x
-// 	}
-// 	return y
-// }
+func Max(x, y int) int {
+	if x > y {
+		return x
+	}
+	return y
+}

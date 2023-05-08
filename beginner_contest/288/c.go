@@ -24,87 +24,112 @@ var sc = bufio.NewScanner(os.Stdin)
 
 // var dp [][]int
 // var sli []int
-var memo map[int]int
+// var memo [][]int
+
+type Node struct {
+	links []int
+}
+
+// map[root node]Tree
+var tree map[int]*Node
+var appear map[int]struct{}
+var memo map[int]struct{}
+var ans int
 
 func run() interface{} {
-	n := readInt()
+	_, m := readInt(), readInt()
 	// s := read()
+	if m == 0 {
+		return 0
+	}
 
-	memo = make(map[int]int)
+	tree = make(map[int]*Node)
+	memo = make(map[int]struct{})
+	for i := 0; i < m; i++ {
+		a, b := readInt(), readInt()
+		createNode(a, b)
+		createNode(b, a)
+		memo[a] = struct{}{}
+		memo[b] = struct{}{}
+	}
 
-	ans := 0
-	factorization(n - 1)
-	for i := 1; i < n; i++ {
-		ab := i
-		cd := n - i
-		ans += memo[ab] * memo[cd]
+	// true if vertex have already appeared
+	appear = make(map[int]struct{})
+	appear[1] = struct{}{}
+	ans = 0
+	var node int
+	for len(memo) != len(appear) {
+
+		for node = range tree {
+			p(node, len(tree))
+			calculate(node, 0)
+			break
+		}
 	}
 
 	return ans
 }
 
-func factorization(n int) {
-	prime_numbers := []int{2, 3}
-	memo[1] = 1
-	memo[2] = 2
-	memo[3] = 2
-	for i := 4; i <= n; i++ {
-		if memo[i] > 0 {
-			continue
-		}
-
-		x := i
-		m := make(map[int]int)
-		is_prime := true
-		for j := 0; j < len(prime_numbers); j++ {
-			pri := prime_numbers[j]
-			for {
-				if x%pri == 0 {
-					x /= pri
-					m[pri]++
-					is_prime = false
-				} else {
-					break
-				}
-			}
-		}
-
-		if is_prime {
-			prime_numbers = append(prime_numbers, i)
-			memo[i] = 2
-			for j := 0; j < len(prime_numbers)-1; j++ {
-				pri := prime_numbers[j]
-				if i*pri > n {
-					break
-				}
-
-				memo[i*pri] = memo[i] * 2
-			}
+func calculate(current, parent int) {
+	node := tree[current]
+	delete(tree, current)
+	children := node.getChildren(parent)
+	// p(current)
+	for _, v := range children {
+		if _, ok := appear[v]; ok {
+			// delete link
+			ans++
 		} else {
-			ret := 1
-			for _, c := range m {
-				ret *= (c + 1)
-			}
-			memo[i] = ret
+			appear[v] = struct{}{}
+			calculate(v, current)
 		}
-
 	}
 }
 
+func createNode(parent, child int) {
+	if node, ok := tree[parent]; ok {
+		node.links = append(node.links, child)
+	} else {
+		tree[parent] = &Node{links: []int{child}}
+	}
+}
+
+func (node *Node) getChildren(parent_id int) []int {
+	ret := make([]int, 0)
+	for _, v := range node.links {
+		if v == parent_id {
+			continue
+		}
+		if _, ok := appear[v]; ok {
+			continue
+		}
+
+		ret = append(ret, v)
+	}
+	return ret
+}
+
+// 6 7
+// 1 2
+// 1 3
+// 2 3
+// 4 2
+// 6 5
+// 4 6
+// 4 5
+
+// 1 l
+// 2 l
+// 3 l
+// 4
 // 5
-// 1,5 5,1
-// 10 = 5 * 2 1+1 * 1+1 = 4
-// 1,10 2,5 5,2 10,1
-// 20 = 5 *2^2 = 1+1 * 2+1 = 6
-// 1,20 2,10 4,5 5,4 10,2 20,1
-// 40 = 5 *2^3 = 1+1 * 3+1 = 8
-// 1,40 2,20 4,10 5,8
+// 6
 
 // ========================read
-// func read() string {
-// 	sc.Scan()
-//     return sc.Text()
-// }
+func read() string {
+	sc.Scan()
+	return sc.Text()
+}
 
 // func readSli(n int) []string {
 func readSli(n int) []int {
@@ -208,18 +233,18 @@ func p(arg ...interface{}) {
 			continue
 		}
 		// pointer
-		// if dp, ok := v.([]*Rope); ok {
-		// 	fmt.Print("[ ")
-		// 	for i, v := range dp {
-		// 		if i == 0 {
-		// 			continue
-		// 		}
-		// 		fmt.Print(*v)
-		// 		fmt.Print(" ")
-		// 	}
-		// 	fmt.Println("]")
-		// 	continue
-		// }
+		if dp, ok := v.(map[int]*Node); ok {
+			fmt.Print("[ ")
+			for i, v := range dp {
+				if i == 0 {
+					continue
+				}
+				fmt.Print(v.links)
+				fmt.Print(" ")
+			}
+			fmt.Println("]")
+			continue
+		}
 		fmt.Println(v)
 	}
 }
