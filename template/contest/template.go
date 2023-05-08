@@ -88,7 +88,9 @@ func print(ans interface{}) {
 	}
 	if sli, ok := ans.([]int); ok {
 		for _, v := range sli {
-			fmt.Println(v)
+			// fmt.Println(v)
+			fmt.Print(v)
+			fmt.Print(" ")
 		}
 		return
 	}
@@ -100,7 +102,8 @@ func print(ans interface{}) {
 	}
 	if sli, ok := ans.([]string); ok {
 		for _, v := range sli {
-			fmt.Println(v)
+			fmt.Print(v)
+			// fmt.Println(v)
 		}
 		return
 	}
